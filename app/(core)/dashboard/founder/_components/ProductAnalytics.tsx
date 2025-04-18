@@ -1,67 +1,75 @@
 'use client';
-import { ArrowLeft } from 'lucide-react';
+
+import { ChevronLeft, Eye, MessageSquare, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { StatCard } from './StatCard';
-import { Eye, MessageSquare, TrendingUp } from 'lucide-react';
 import { AnalyticsChart } from './AnalyticsChart';
 import { useState } from 'react';
-// import CommentsModal from "@/components/CommentsModal"; // Import the CommentsModal
 
 export function ProductAnalytics() {
   const [showCommentsModal, setShowCommentsModal] = useState(false);
-  const [startupId, setStartupId] = useState(''); // To store the startupId
+  const [startupId, setStartupId] = useState('');
 
-  // Example startup ID, you can replace this with dynamic data
-  const currentStartupId = 'startup-123'; // This should be dynamic based on the founder's current startup
+  const currentStartupId = 'startup-123';
 
-  // Toggle the Comments Modal and set the startup ID
   const handleCommentsClick = (startupId: string) => {
     setStartupId(startupId);
     setShowCommentsModal(true);
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" className="hover:bg-secondary/10">
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
+    <div className="space-y-6 px-4 py-4 sm:px-6 md:px-8 max-w-screen-xl mx-auto">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:gap-6 gap-3">
+        <div className="flex items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="w-12 h-12 rounded-full hover:bg-secondary/20"
+          >
+            <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground" />
+          </Button>
+        </div>
         <div>
-          <h1 className="text-4xl font-bold mb-2">Product Analytics</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+            Product Analytics
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
             Track your pitch performance and engagement
           </p>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      {/* Stats */}
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         <StatCard
           title="Total Views"
           value="189"
-          icon={<Eye className="w-4 h-4 text-secondary" />}
+          icon={<Eye className="w-5 h-5 text-secondary" />}
         />
         <StatCard
           title="Interested Sharks"
           value="32"
-          icon={<TrendingUp className="w-4 h-4 text-primary" />}
+          icon={<TrendingUp className="w-5 h-5 text-primary" />}
         />
         <StatCard
           title="Comments"
           value="45"
-          icon={<MessageSquare className="w-4 h-4 text-accent" />}
-          // onClick={() => handleCommentsClick(currentStartupId)} // Handle the click and pass the startupId
+          icon={<MessageSquare className="w-5 h-5 text-accent" />}
+          // onClick={() => handleCommentsClick(currentStartupId)}
         />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      {/* Chart */}
+      <div className="w-full">
         <AnalyticsChart />
       </div>
 
-      {/* Show Comments Modal if clicked */}
+      {/* Optional Comments Modal */}
       {/* {showCommentsModal && (
         <CommentsModal
-          startupId={startupId} // Pass the startupId to fetch comments
-          onClose={() => setShowCommentsModal(false)} // Close the modal
+          startupId={startupId}
+          onClose={() => setShowCommentsModal(false)}
         />
       )} */}
     </div>
