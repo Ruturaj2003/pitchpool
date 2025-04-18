@@ -1,7 +1,7 @@
-import { ArrowRightIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { VideoUploader } from "./VideoUploader";
+import { ArrowRightIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { VideoUploader } from './VideoUploader';
 // import { useNavigate } from "react-router-dom";
 
 interface Product {
@@ -13,16 +13,16 @@ interface Product {
 
 const mockProducts: Product[] = [
   {
-    id: "1",
-    name: "Smart Coffee Maker",
-    description: "AI-powered coffee brewing system",
-    imageUrl: "https://placehold.co/600x400",
+    id: '1',
+    name: 'Smart Coffee Maker',
+    description: 'AI-powered coffee brewing system',
+    imageUrl: 'https://placehold.co/600x400',
   },
   {
-    id: "2",
-    name: "EcoCharge",
-    description: "Solar-powered portable charger",
-    imageUrl: "https://placehold.co/600x400",
+    id: '2',
+    name: 'EcoCharge',
+    description: 'Solar-powered portable charger',
+    imageUrl: 'https://placehold.co/600x400',
   },
 ];
 
@@ -32,7 +32,10 @@ export function ProductList() {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {mockProducts.map((product) => (
-        <Card key={product.id} className="group cursor-pointer hover:shadow-lg transition-shadow duration-200">
+        <Card
+          key={product.id}
+          className="group cursor-pointer hover:shadow-lg transition-shadow duration-200"
+        >
           <CardHeader>
             <img
               src={product.imageUrl}
@@ -54,11 +57,6 @@ export function ProductList() {
           </CardContent>
         </Card>
       ))}
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <VideoUploader />
-      </div>
-
     </div>
   );
 }
