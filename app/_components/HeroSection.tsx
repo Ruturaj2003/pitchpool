@@ -1,5 +1,12 @@
 import { Button } from '@/components/ui/button';
-import { Phone, Play } from 'lucide-react';
+import {
+  CircleDollarSign,
+  HandCoins,
+  Phone,
+  PiggyBank,
+  Play,
+  Rocket,
+} from 'lucide-react';
 
 const HeroSection = () => {
   return (
@@ -17,16 +24,15 @@ const HeroSection = () => {
           </p>
           <div className="flex gap-4">
             <Button size="lg" className="bg-accent hover:bg-accent/90">
-              <Phone className="mr-2 h-5 w-5" />
-              Get Early Access
+              <PiggyBank className="mr-2 h-6 w-6" />I Want to Invest
             </Button>
             <Button
               size="lg"
               variant="outline"
               className="bg-white/10 hover:bg-white/20"
             >
-              <Play className="mr-2 h-5 w-5" />
-              How It Works
+              <Rocket className="mr-2 h-6 w-6" />
+              Pitch My Startup
             </Button>
           </div>
         </div>
