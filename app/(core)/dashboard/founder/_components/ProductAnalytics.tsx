@@ -1,17 +1,18 @@
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { StatCard } from "./StatCard";
-import { Eye, MessageSquare, TrendingUp } from "lucide-react";
-import { AnalyticsChart } from "./AnalyticsChart";
-import { useState } from "react";
+'use client';
+import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { StatCard } from './StatCard';
+import { Eye, MessageSquare, TrendingUp } from 'lucide-react';
+import { AnalyticsChart } from './AnalyticsChart';
+import { useState } from 'react';
 // import CommentsModal from "@/components/CommentsModal"; // Import the CommentsModal
 
 export function ProductAnalytics() {
   const [showCommentsModal, setShowCommentsModal] = useState(false);
-  const [startupId, setStartupId] = useState(""); // To store the startupId
+  const [startupId, setStartupId] = useState(''); // To store the startupId
 
   // Example startup ID, you can replace this with dynamic data
-  const currentStartupId = "startup-123"; // This should be dynamic based on the founder's current startup
+  const currentStartupId = 'startup-123'; // This should be dynamic based on the founder's current startup
 
   // Toggle the Comments Modal and set the startup ID
   const handleCommentsClick = (startupId: string) => {
@@ -22,11 +23,7 @@ export function ProductAnalytics() {
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="hover:bg-secondary/10"
-        >
+        <Button variant="ghost" size="icon" className="hover:bg-secondary/10">
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div>
