@@ -1,6 +1,7 @@
 import { ArrowRightIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Link from 'next/link';
 
 interface Product {
   id: string;
@@ -73,12 +74,14 @@ export function ProductList() {
                 <p className="text-sm text-muted-foreground">
                   {product.description}
                 </p>
-                <Button
-                  variant="ghost"
-                  className="text-primary hover:bg-primary hover:text-white transition-all"
-                >
-                  View Analytics <ArrowRightIcon className="w-4 h-4 ml-2" />
-                </Button>
+                <Link href={`/dashboard/founder/${product.id}`} passHref>
+                  <Button
+                    variant="ghost"
+                    className="text-primary hover:bg-primary hover:text-white transition-all"
+                  >
+                    View Analytics <ArrowRightIcon className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           ))}
@@ -106,12 +109,14 @@ export function ProductList() {
               <p className="text-sm text-muted-foreground">
                 {product.description}
               </p>
-              <Button
-                variant="ghost"
-                className="text-primary hover:bg-primary hover:text-white transition-all"
-              >
-                View Analytics <ArrowRightIcon className="w-4 h-4 ml-2" />
-              </Button>
+              <Link href={`/dashboard/founder/${product.id}`} passHref>
+                <Button
+                  variant="ghost"
+                  className="text-primary hover:bg-primary hover:text-white transition-all"
+                >
+                  View Analytics <ArrowRightIcon className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         ))}
