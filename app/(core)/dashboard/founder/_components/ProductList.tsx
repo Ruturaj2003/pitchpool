@@ -1,8 +1,6 @@
 import { ArrowRightIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { VideoUploader } from './VideoUploader';
-// import { useNavigate } from "react-router-dom";
 
 interface Product {
   id: string;
@@ -24,39 +22,100 @@ const mockProducts: Product[] = [
     description: 'Solar-powered portable charger',
     imageUrl: 'https://placehold.co/600x400',
   },
+  {
+    id: '3',
+    name: 'AquaSense',
+    description: 'Smart water purifier for modern homes',
+    imageUrl: 'https://placehold.co/600x400',
+  },
+  {
+    id: '4',
+    name: 'FitMirror',
+    description: 'AI fitness mirror with real-time feedback',
+    imageUrl: 'https://placehold.co/600x400',
+  },
+  {
+    id: '5',
+    name: 'GlowDesk',
+    description: 'Ergonomic desk with mood lighting and charging',
+    imageUrl: 'https://placehold.co/600x400',
+  },
+  {
+    id: '6',
+    name: 'AirNanny',
+    description: 'Indoor air quality monitor with insights',
+    imageUrl: 'https://placehold.co/600x400',
+  },
 ];
 
 export function ProductList() {
-  // const navigate = useNavigate();
-
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {mockProducts.map((product) => (
-        <Card
-          key={product.id}
-          className="group cursor-pointer hover:shadow-lg transition-shadow duration-200"
-        >
-          <CardHeader>
-            <img
-              src={product.imageUrl}
-              alt={product.name}
-              className="w-full h-48 object-cover rounded-t-lg"
-            />
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <CardTitle>{product.name}</CardTitle>
-            <p className="text-muted-foreground">{product.description}</p>
-            <Button
-              variant="ghost"
-              className="group-hover:translate-x-1 transition-transform duration-200"
-              //onClick={() => navigate(`/product/${product.id}`)}
+    <div className="font-sans">
+      {/* Mobile: Horizontal scroll with snap */}
+      <div className="block lg:hidden overflow-x-auto snap-x snap-mandatory scroll-smooth px-2 scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
+        <div className="flex gap-4 pb-4">
+          {mockProducts.map((product) => (
+            <Card
+              key={product.id}
+              className="min-w-[300px] sm:min-w-[340px] snap-start rounded-2xl bg-gradient-to-br from-muted/20 via-secondary/10 to-accent/10 shadow-md transition hover:shadow-xl hover:scale-[1.02] duration-300 ease-in-out"
             >
-              View Analytics
-              <ArrowRightIcon className="w-4 h-4 ml-2" />
-            </Button>
-          </CardContent>
-        </Card>
-      ))}
+              <CardHeader className="pl-3 pr-3  rounded-2xl overflow-hidden">
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="w-full h-48 object-cover rounded-2xl"
+                />
+              </CardHeader>
+              <CardContent className="space-y-2 p-4">
+                <CardTitle className="text-lg font-semibold">
+                  {product.name}
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  {product.description}
+                </p>
+                <Button
+                  variant="ghost"
+                  className="text-primary hover:bg-primary hover:text-white transition-all"
+                >
+                  View Analytics <ArrowRightIcon className="w-4 h-4 ml-2" />
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: Grid layout */}
+      <div className="hidden lg:grid grid-cols-2 xl:grid-cols-3 gap-6">
+        {mockProducts.map((product) => (
+          <Card
+            key={product.id}
+            className="rounded-2xl bg-gradient-to-br from-muted/20 via-secondary/10 to-accent/10 shadow-md transition hover:shadow-xl hover:scale-[1.02] duration-300 ease-in-out"
+          >
+            <CardHeader className="p-0 rounded-t-2xl overflow-hidden">
+              <img
+                src={product.imageUrl}
+                alt={product.name}
+                className="w-full h-48 object-cover"
+              />
+            </CardHeader>
+            <CardContent className="space-y-2 p-4">
+              <CardTitle className="text-lg font-semibold">
+                {product.name}
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                {product.description}
+              </p>
+              <Button
+                variant="ghost"
+                className="text-primary hover:bg-primary hover:text-white transition-all"
+              >
+                View Analytics <ArrowRightIcon className="w-4 h-4 ml-2" />
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
