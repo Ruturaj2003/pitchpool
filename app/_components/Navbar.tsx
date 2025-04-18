@@ -11,6 +11,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
+import { UserButton } from '@clerk/nextjs';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -50,6 +51,7 @@ const Navbar = () => {
           <Button className="bg-primary hover:bg-primary/90">
             Get Started
           </Button>
+          <UserButton></UserButton>
         </div>
 
         {/* Mobile Menu Button */}

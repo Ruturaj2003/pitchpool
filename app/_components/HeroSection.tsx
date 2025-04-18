@@ -14,8 +14,8 @@ const HeroSection = () => {
   const router = useRouter();
 
   const handleRoleLogin = (role: 'founder' | 'investor') => {
-    sessionStorage.setItem('role', role);
-    router.push(`/sign-in?role=${role}`);
+    sessionStorage.setItem('user_role', role);
+    return router.push('/sign-in');
   };
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-primary via-secondary to-accent overflow-hidden">
