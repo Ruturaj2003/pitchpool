@@ -1,12 +1,12 @@
-import React, { useEffect, useRef } from 'react';
-import { Card } from '@/components/ui/card';
-import { Avatar } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Play, Pause } from 'lucide-react';
+import React, { useEffect, useRef } from "react";
+import { Card } from "@/components/ui/card";
+import { Avatar } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Play, Pause } from "lucide-react";
 
 interface VideoCardProps {
   video: {
-    id: number;
+    id: string;
     title: string;
     founder: string;
     description: string;
@@ -57,7 +57,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
     <Card
       ref={cardRef}
       className={`relative h-full w-full overflow-hidden bg-gradient-to-br from-purple-600/20 to-blue-500/20 transition-all duration-300 ${
-        isActive ? 'scale-100' : 'scale-95 opacity-90'
+        isActive ? "scale-100" : "scale-95 opacity-90"
       }`}
     >
       <div className="absolute inset-0 flex items-center justify-center">

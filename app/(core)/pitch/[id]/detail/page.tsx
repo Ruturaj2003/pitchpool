@@ -1,7 +1,12 @@
-'use client';
-import React, { useState } from 'react';
-import { useSwipeable } from 'react-swipeable';
-import { useRouter } from 'next/navigation';
+// @ts-nocheck
+"use client";
+import React, { useState, useEffect } from "react";
+import { useSwipeable } from "react-swipeable";
+import { useRouter } from "next/navigation";
+import { db } from "@/lib/firebase"; // Make sure the correct path is used
+import { ref, set, remove, onValue } from "firebase/database";
+
+// ICONS
 import {
   ArrowRight,
   Bookmark,
@@ -20,14 +25,35 @@ import {
   ChevronUp,
   Building,
   Target,
-  Layers,
   MessageCircle,
   X,
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+} from "lucide-react";
+
+import { motion, AnimatePresence } from "framer-motion";
+import InterestAction from "./_components/InterestAction";
+
+// Firebase pitch ID
+const PITCH_ID = "216c0bfc-4932-4d88-b4be-a97fb7923902";
 
 const DetailedPitchPage: React.FC = () => {
   const router = useRouter();
+  const [startup, setStartup] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [openSection, setOpenSection] = useState("overview");
+  const [commentModalOpen, setCommentModalOpen] = useState(false);
+  const [comment, setComment] = useState("");
+
+  useEffect(() => {
+    const pitchRef = ref(db, `pitches/${PITCH_ID}`);
+    const unsubscribe = onValue(pitchRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) setStartup(data);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const onSwipeRight = () => router.back();
 
   const handlers = useSwipeable({
@@ -37,44 +63,21 @@ const DetailedPitchPage: React.FC = () => {
     trackTouch: true,
   });
 
-  const startup = {
-    name: 'EcoCharge',
-    tagline: 'Charging the world sustainably',
-    sector: 'Renewable Energy',
-    founderName: 'Jane Doe',
-    founderTitle: 'CEO & Founder',
-    founderPhotoUrl: 'https://via.placeholder.com/100',
-    problem: 'EV charging is slow and inaccessible in remote areas.',
-    solution: 'Solar-powered charging stations with battery storage.',
-    marketSize: '$5B global EV infrastructure market',
-    businessModel: 'Hardware sales + subscription model',
-    competition: 'ChargePoint, EVgo, Tesla',
-    traction: '100+ stations deployed',
-    team: 'Jane Doe, Mike Ross, Rachel Zane',
-    askAmount: '$250,000',
-    equity: '10%',
-    useOfFunds: 'City expansions & tech improvements',
-  };
-
-  // State for accordion sections
-  const [openSection, setOpenSection] = useState('overview');
-  // State for comment modal
-  const [commentModalOpen, setCommentModalOpen] = useState(false);
-  const [comment, setComment] = useState('');
-
-  const toggleSection = (sectionId) => {
+  const toggleSection = (sectionId) =>
     setOpenSection(openSection === sectionId ? null : sectionId);
-  };
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically save the comment to your backend
-    console.log('Submitted comment:', comment);
-    // Clear the comment field and close the modal
-    setComment('');
+    console.log("Submitted comment:", comment);
+    setComment("");
     setCommentModalOpen(false);
-    // You could also show a success message
   };
+
+  if (loading) return <div className="text-center mt-20">Loading pitch...</div>;
+  if (!startup)
+    return (
+      <div className="text-center mt-20 text-red-600">Pitch not found</div>
+    );
 
   return (
     <div {...handlers} className="min-h-screen bg-gray-50 py-8">
@@ -120,24 +123,24 @@ const DetailedPitchPage: React.FC = () => {
           id="overview"
           title="Business Overview"
           icon={<Building className="w-5 h-5" />}
-          isOpen={openSection === 'overview'}
-          toggleOpen={() => toggleSection('overview')}
+          isOpen={openSection === "overview"}
+          toggleOpen={() => toggleSection("overview")}
         >
           <div className="grid grid-cols-1 gap-4">
             <InfoCard
-              icon={<AlertCircle className="w-5 h-5 text-red-500" />}
               title="Problem"
-              value={startup.problem}
+              icon={<AlertCircle className="w-5 h-5 text-red-500" />}
+              value={startup.pitchDetails.problem}
             />
             <InfoCard
-              icon={<Lightbulb className="w-5 h-5 text-yellow-500" />}
               title="Solution"
-              value={startup.solution}
+              icon={<Lightbulb className="w-5 h-5 text-yellow-500" />}
+              value={startup.pitchDetails.solution}
             />
             <InfoCard
-              icon={<DollarSign className="w-5 h-5 text-teal-500" />}
               title="Business Model"
-              value={startup.businessModel}
+              icon={<DollarSign className="w-5 h-5 text-teal-500" />}
+              value={startup.pitchDetails.businessModel}
             />
           </div>
         </AccordionSection>
@@ -146,24 +149,24 @@ const DetailedPitchPage: React.FC = () => {
           id="market"
           title="Market & Opportunity"
           icon={<Globe className="w-5 h-5" />}
-          isOpen={openSection === 'market'}
-          toggleOpen={() => toggleSection('market')}
+          isOpen={openSection === "market"}
+          toggleOpen={() => toggleSection("market")}
         >
           <div className="grid grid-cols-1 gap-4">
             <InfoCard
-              icon={<Globe className="w-5 h-5 text-green-500" />}
               title="Market Size"
-              value={startup.marketSize}
+              icon={<Globe className="w-5 h-5 text-green-500" />}
+              value={startup.pitchDetails.marketSize}
             />
             <InfoCard
-              icon={<Users className="w-5 h-5 text-orange-500" />}
               title="Competition"
-              value={startup.competition}
+              icon={<Users className="w-5 h-5 text-orange-500" />}
+              value={startup.pitchDetails.competition}
             />
             <InfoCard
-              icon={<TrendingUp className="w-5 h-5 text-blue-500" />}
               title="Traction"
-              value={startup.traction}
+              icon={<TrendingUp className="w-5 h-5 text-blue-500" />}
+              value={startup.pitchDetails.traction}
             />
           </div>
         </AccordionSection>
@@ -172,65 +175,60 @@ const DetailedPitchPage: React.FC = () => {
           id="team"
           title="Team"
           icon={<Users className="w-5 h-5" />}
-          isOpen={openSection === 'team'}
-          toggleOpen={() => toggleSection('team')}
+          isOpen={openSection === "team"}
+          toggleOpen={() => toggleSection("team")}
         >
-          <div className="grid grid-cols-1 gap-4">
-            <InfoCard
-              icon={<Users className="w-5 h-5 text-purple-500" />}
-              title="Team Members"
-              value={startup.team}
-            />
-          </div>
+          <InfoCard
+            title="Team Members"
+            icon={<Users className="w-5 h-5 text-purple-500" />}
+            value={startup.pitchDetails.team}
+          />
         </AccordionSection>
 
         <AccordionSection
           id="investment"
           title="Investment Opportunity"
           icon={<Target className="w-5 h-5" />}
-          isOpen={openSection === 'investment'}
-          toggleOpen={() => toggleSection('investment')}
+          isOpen={openSection === "investment"}
+          toggleOpen={() => toggleSection("investment")}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <InfoCard
-              icon={<DollarSign className="w-5 h-5 text-indigo-600" />}
               title="Ask Amount"
-              value={startup.askAmount}
+              icon={<DollarSign className="w-5 h-5 text-indigo-600" />}
+              value={startup.pitchDetails.askAmount}
             />
             <InfoCard
-              icon={<Percent className="w-5 h-5 text-indigo-600" />}
               title="Equity"
-              value={startup.equity}
+              icon={<Percent className="w-5 h-5 text-indigo-600" />}
+              value={startup.pitchDetails.equity}
             />
             <InfoCard
-              className="md:col-span-2"
-              icon={<Briefcase className="w-5 h-5 text-gray-700" />}
               title="Use of Funds"
-              value={startup.useOfFunds}
+              icon={<Briefcase className="w-5 h-5 text-gray-700" />}
+              value={startup.pitchDetails.useOfFunds}
+              className="md:col-span-2"
             />
           </div>
         </AccordionSection>
       </main>
 
-      {/* Glass Effect Comment Modal */}
+      {/* Feedback Modal */}
       <AnimatePresence>
         {commentModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-            {/* Backdrop with blur effect */}
+          <motion.div className="fixed inset-0 flex items-center justify-center z-50 p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-transparent bg-opacity-30 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/30 backdrop-blur-sm"
               onClick={() => setCommentModalOpen(false)}
             />
-
-            {/* Modal with glass effect */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 500 }}
+              transition={{ type: "spring", damping: 25, stiffness: 500 }}
               className="bg-white bg-opacity-70 backdrop-blur-md border border-white border-opacity-20 rounded-xl shadow-xl p-6 w-full max-w-lg relative z-10"
               onClick={(e) => e.stopPropagation()}
             >
@@ -258,110 +256,75 @@ const DetailedPitchPage: React.FC = () => {
                     placeholder="Write your feedback here..."
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    required
                   />
                 </div>
-
-                <div className="flex justify-end gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setCommentModalOpen(false)}
-                    className="px-4 py-2 bg-white bg-opacity-50 backdrop-blur-sm border border-gray-200 rounded-lg text-gray-700 hover:bg-opacity-70 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-indigo-600 bg-opacity-90 backdrop-blur-sm text-white rounded-lg hover:bg-opacity-100 transition-colors"
-                  >
-                    Submit Feedback
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  className="w-full py-2 px-4 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  Submit
+                </button>
               </form>
             </motion.div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
   );
 };
 
-// Accordion Section Component
-const AccordionSection: React.FC<{
-  id: string;
-  title: string;
-  icon: React.ReactNode;
-  isOpen: boolean;
-  toggleOpen: () => void;
-  children: React.ReactNode;
-}> = ({ id, title, icon, isOpen, toggleOpen, children }) => (
-  <div className="bg-white rounded-xl shadow-md overflow-hidden">
-    <button
-      className="w-full flex items-center justify-between p-5 text-left focus:outline-none"
-      onClick={toggleOpen}
-    >
-      <div className="flex items-center">
-        <div className="p-2 bg-gray-100 rounded-lg mr-3">{icon}</div>
-        <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
-      </div>
-      {isOpen ? (
-        <ChevronUp className="w-5 h-5 text-gray-500" />
-      ) : (
-        <ChevronDown className="w-5 h-5 text-gray-500" />
-      )}
-    </button>
-
-    {isOpen && (
-      <motion.div
-        initial={{ height: 0, opacity: 0 }}
-        animate={{ height: 'auto', opacity: 1 }}
-        exit={{ height: 0, opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        className="px-5 pb-5"
-      >
-        {children}
-      </motion.div>
-    )}
-  </div>
-);
-
-// Info Card Component
-const InfoCard: React.FC<{
-  icon: React.ReactNode;
-  title: string;
-  value: string;
-  className?: string;
-}> = ({ icon, title, value, className = '' }) => (
-  <div
-    className={`bg-gray-50 rounded-lg p-4 flex items-start space-x-3 ${className}`}
-  >
-    <div className="p-2 bg-white rounded-lg shadow-sm">{icon}</div>
-    <div>
-      <h3 className="text-sm font-medium text-gray-500">{title}</h3>
-      <p className="mt-1 text-gray-800">{value}</p>
-    </div>
-  </div>
-);
-
-// Action Button Component
-const ActionButton: React.FC<{
-  icon: React.ReactNode;
-  label: string;
-  primary?: boolean;
-  onClick?: () => void;
-}> = ({ icon, label, primary = false, onClick }) => (
+// Components
+const ActionButton = ({ icon, label, primary, onClick }) => (
   <button
     onClick={onClick}
-    className={`flex items-center justify-center gap-2 py-2 px-4 rounded-lg font-medium text-sm transition
-      ${
-        primary
-          ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-          : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-      }`}
+    className={`py-2 px-4 rounded-lg border flex items-center gap-2 ${
+      primary ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-700"
+    } hover:${primary ? "bg-indigo-700" : "bg-gray-200"} transition-all`}
   >
     {icon}
-    {label}
+    <span className="text-sm">{label}</span>
   </button>
+);
+
+const AccordionSection = ({
+  id,
+  title,
+  icon,
+  isOpen,
+  toggleOpen,
+  children,
+}) => (
+  <section className="rounded-xl shadow-md p-4 bg-white">
+    <div
+      onClick={toggleOpen}
+      className="flex justify-between items-center cursor-pointer"
+    >
+      <div className="flex items-center gap-2">
+        {icon}
+        <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
+      </div>
+      <div className="text-xl">
+        {isOpen ? (
+          <ChevronUp className="w-5 h-5" />
+        ) : (
+          <ChevronDown className="w-5 h-5" />
+        )}
+      </div>
+    </div>
+    {isOpen && <div className="mt-4">{children}</div>}
+  </section>
+);
+
+const InfoCard = ({ icon, title, value, className }) => (
+  <div
+    className={`bg-gray-100 rounded-lg p-4 flex items-start gap-4 ${className}`}
+  >
+    <div className="text-indigo-500">{icon}</div>
+    <div>
+      <h4 className="font-semibold text-gray-700">{title}</h4>
+      <p className="text-gray-600">{value}</p>
+    </div>
+  </div>
 );
 
 export default DetailedPitchPage;

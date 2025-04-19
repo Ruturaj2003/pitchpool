@@ -1,36 +1,19 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import ReelCard from './ReelCard';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import ReelCard from "./ReelCard";
+import { ref, get } from "firebase/database";
+import { db } from "@/lib/firebase"; // Importing db from firebase.ts
 
 interface Reel {
-  id: number;
+  id: string;
   videoUrl: string;
   productName: string;
   description: string;
+  founderName: string;
+  thumbnailUrl: string;
 }
-
-const DUMMY_REELS: Reel[] = [
-  {
-    id: 1,
-    videoUrl: '/vid.mp4',
-    productName: 'Tech Gadget Pro',
-    description: 'Next generation technology at your fingertips',
-  },
-  {
-    id: 2,
-    videoUrl: '/vid.mp4',
-    productName: 'Smart Device X',
-    description: 'Revolutionary smart device for modern living',
-  },
-  {
-    id: 3,
-    videoUrl: '/vid.mp4',
-    productName: 'Digital Assistant',
-    description: 'Your personal AI companion',
-  },
-];
 
 const ReelsView = () => {
   const [reels, setReels] = useState<Reel[]>([]);
@@ -38,7 +21,29 @@ const ReelsView = () => {
   const router = useRouter();
 
   useEffect(() => {
-    setReels(DUMMY_REELS); // Replace with real API later
+    // Fetching data from Firebase Realtime Database
+    const fetchReels = async () => {
+      const reelsRef = ref(db, "pitches"); // Reference to the "pitches" node
+      const snapshot = await get(reelsRef);
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const fetchedReels: Reel[] = Object.entries(data).map(
+          ([id, pitch]: any) => ({
+            id,
+            videoUrl: pitch.videoUrl ?? "/fallback.mp4",
+            productName: pitch.name,
+            description: pitch.description,
+            founderName: pitch.founderName,
+            thumbnailUrl: pitch.thumbnailUrl ?? "/placeholder.svg",
+          })
+        );
+        setReels(fetchedReels);
+      } else {
+        console.log("No data available");
+      }
+    };
+
+    fetchReels();
   }, []);
 
   const handleSwipeUp = () => {

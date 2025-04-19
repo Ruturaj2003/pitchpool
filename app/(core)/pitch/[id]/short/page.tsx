@@ -1,19 +1,38 @@
 // @ts-nocheck
-'use client';
-import { useSwipeable } from 'react-swipeable';
+"use client";
+import { useSwipeable } from "react-swipeable";
+import React, { useEffect, useState } from "react";
+import { Heart, Bookmark, MessageCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { db } from "@/lib/firebase"; // Make sure the correct path is used
+import { ref, get } from "firebase/database"; // Import the necessary Firebase methods
 
-import React from 'react';
-import { Heart, Bookmark, MessageCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 const ShortDetailPage = () => {
+  const [startup, setStartup] = useState(null); // State to store fetched pitch details
   const router = useRouter();
+  const pitchId = "216c0bfc-4932-4d88-b4be-a97fb7923902"; // The specific pitch ID provided
+
+  useEffect(() => {
+    // Fetch pitch data from Firebase
+    const fetchPitchDetails = async () => {
+      const pitchRef = ref(db, `pitches/${pitchId}`); // Path to the specific pitch ID in Firebase
+      const snapshot = await get(pitchRef);
+      if (snapshot.exists()) {
+        setStartup(snapshot.val()); // Set the pitch details to the state
+      } else {
+        console.log("No data available for this pitch.");
+      }
+    };
+
+    fetchPitchDetails();
+  }, []);
 
   const handlers = useSwipeable({
     onSwipedRight: onSwipeRight,
-    onSwipedLeft: onSwipeLeft, // Trigger onSwipeRight when swiped right
-    preventScrollOnSwipe: true, // Prevent scrolling when swiping
-    trackMouse: true, // Enable mouse tracking (for testing)
-    trackTouch: true, // Enable touch tracking
+    onSwipedLeft: onSwipeLeft,
+    preventScrollOnSwipe: true,
+    trackMouse: true,
+    trackTouch: true,
   });
 
   function onSwipeRight() {
@@ -21,20 +40,12 @@ const ShortDetailPage = () => {
   }
 
   function onSwipeLeft() {
-    router.push(`/pitch/${startup.id}/detail`);
+    router.push(`/pitch/${pitchId}/detail`);
   }
 
-  const startup = {
-    name: 'EcoCharge',
-    tagline: 'Charging the world sustainably',
-    founderName: 'Jane Doe',
-    founderTitle: 'CEO & Founder',
-    problem:
-      'Electric vehicle charging is slow and inaccessible in remote areas.',
-    solution: 'Solar-powered EV stations for rapid and eco-friendly charging.',
-    askAmount: '$100,000',
-    id: '2',
-  };
+  if (!startup) {
+    return <p>Loading pitch details...</p>; // Show loading text until data is fetched
+  }
 
   return (
     <main
@@ -62,13 +73,14 @@ const ShortDetailPage = () => {
             label="Founder"
             value={`${startup.founderName} — ${startup.founderTitle}`}
           />
-          <Detail label="Problem" value={startup.problem} />
-          <Detail label="Solution" value={startup.solution} />
+          <Detail label="Problem" value={startup.pitchDetails.problem} />
+          <Detail label="Solution" value={startup.pitchDetails.solution} />
           <Detail
             label="Ask Amount"
-            value={startup.askAmount}
+            value={startup.pitchDetails.askAmount}
             className="font-medium text-purple-700"
           />
+          <Detail label="Equity" value={startup.pitchDetails.equity} />
         </div>
 
         {/* Action Buttons */}
@@ -90,7 +102,7 @@ const ShortDetailPage = () => {
 };
 
 // Detail Component
-const Detail = ({ label, value, className = '' }) => (
+const Detail = ({ label, value, className = "" }) => (
   <div className="flex flex-col space-y-1">
     <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
       {label}
@@ -106,8 +118,8 @@ const Button = ({ icon, label, primary }) => (
     className={`w-full py-3 px-4 rounded-lg flex items-center justify-center space-x-2 
     ${
       primary
-        ? 'bg-purple-600 hover:bg-purple-700 text-white'
-        : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
+        ? "bg-purple-600 hover:bg-purple-700 text-white"
+        : "bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300"
     } 
     text-base font-medium transition-all duration-200`}
   >

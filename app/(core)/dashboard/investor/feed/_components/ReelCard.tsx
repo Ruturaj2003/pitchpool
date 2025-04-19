@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useRef, useState } from 'react';
-import { useSwipeable } from 'react-swipeable';
-import { Pause, Play, ArrowRight } from 'lucide-react';
+import React, { useRef, useState } from "react";
+import { useSwipeable } from "react-swipeable";
+import { Pause, Play, ArrowRight } from "lucide-react";
 
 interface ReelCardProps {
   videoUrl: string;
