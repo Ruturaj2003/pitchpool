@@ -49,36 +49,34 @@ const ReelsView = () => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
-<<<<<<< Updated upstream
   const handleSwipeLeft = () => {
     const currentReel = reels[currentIndex];
     if (currentReel) {
       router.push(`/pitch/${currentReel.id}/short`);
     }
-=======
-  const handleSwipeRight = () => {
-    router.push('ptich/{id}/details');
->>>>>>> Stashed changes
-  };
+    const handleSwipeRight = () => {
+      router.push('ptich/{id}/details');
+    };
 
-  if (reels.length === 0) {
+    if (reels.length === 0) {
+      return (
+        <div className="h-screen flex items-center justify-center text-white">
+          Loading...
+        </div>
+      );
+    }
+
     return (
-      <div className="h-screen flex items-center justify-center text-white">
-        Loading...
+      <div className="h-screen w-full overflow-hidden bg-black">
+        <ReelCard
+          {...reels[currentIndex]}
+          onSwipeUp={handleSwipeUp}
+          onSwipeDown={handleSwipeDown}
+          onSwipeLeft={handleSwipeLeft}
+        />
       </div>
     );
-  }
-
-  return (
-    <div className="h-screen w-full overflow-hidden bg-black">
-      <ReelCard
-        {...reels[currentIndex]}
-        onSwipeUp={handleSwipeUp}
-        onSwipeDown={handleSwipeDown}
-        onSwipeLeft={handleSwipeLeft}
-      />
-    </div>
-  );
+  };
 };
 
 export default ReelsView;
