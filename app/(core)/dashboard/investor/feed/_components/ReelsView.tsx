@@ -52,7 +52,7 @@ const ReelsView = () => {
   const handleSwipeLeft = () => {
     const currentReel = reels[currentIndex];
     if (currentReel) {
-      router.push(`/pitch/${currentReel.id}/details`);
+      router.push(`/pitch/${currentReel.id}/short`);
     }
   };
 

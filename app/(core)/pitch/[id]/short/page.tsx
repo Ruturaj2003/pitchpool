@@ -1,8 +1,29 @@
 // @ts-nocheck
+'use client';
+import { useSwipeable } from 'react-swipeable';
+
 import React from 'react';
 import { Heart, Bookmark, MessageCircle } from 'lucide-react';
-
+import { useRouter } from 'next/navigation';
 const ShortDetailPage = () => {
+  const router = useRouter();
+
+  const handlers = useSwipeable({
+    onSwipedRight: onSwipeRight,
+    onSwipedLeft: onSwipeLeft, // Trigger onSwipeRight when swiped right
+    preventScrollOnSwipe: true, // Prevent scrolling when swiping
+    trackMouse: true, // Enable mouse tracking (for testing)
+    trackTouch: true, // Enable touch tracking
+  });
+
+  function onSwipeRight() {
+    router.back();
+  }
+
+  function onSwipeLeft() {
+    router.push(`/pitch/${startup.id}/detail`);
+  }
+
   const startup = {
     name: 'EcoCharge',
     tagline: 'Charging the world sustainably',
@@ -12,10 +33,14 @@ const ShortDetailPage = () => {
       'Electric vehicle charging is slow and inaccessible in remote areas.',
     solution: 'Solar-powered EV stations for rapid and eco-friendly charging.',
     askAmount: '$100,000',
+    id: '2',
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-500 to-blue-400 font-sans flex flex-col items-center justify-center py-8 px-4">
+    <main
+      {...handlers}
+      className="min-h-screen bg-gradient-to-br from-purple-500 to-blue-400 font-sans flex flex-col items-center justify-center py-8 px-4"
+    >
       {/* Glassy Gradient Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-blue-400 opacity-50 backdrop-blur-lg"></div>
 
