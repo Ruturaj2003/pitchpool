@@ -117,7 +117,7 @@ const FeedbackGiven: React.FC = () => {
     <DashboardLayout>
       <div className="space-y-6">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-shark-purple animate-fade-in">
+          <h1 className="text-3xl font-bold tracking-tight text-primary animate-fade-in">
             Feedback Given
           </h1>
           <p className="text-muted-foreground animate-fade-in">
@@ -146,7 +146,7 @@ const FeedbackGiven: React.FC = () => {
         ) : (
           <div className="text-center py-12">
             <h3 className="text-lg font-medium">No pitches found</h3>
-            <p className="text-muted-foreground">
+            <p className="text-muted">
               Try adjusting your search or filter criteria
             </p>
           </div>

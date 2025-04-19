@@ -39,11 +39,11 @@ const PitchCard: React.FC<PitchCardProps> = ({
   const getTypeIcon = () => {
     switch (type) {
       case 'interested':
-        return <Heart className="h-4 w-4 text-shark-coral" fill="#F87171" />;
+        return <Heart className="h-4 w-4 text-foreground" fill="#F87171" />;
       case 'feedback':
-        return <MessageSquare className="h-4 w-4 text-shark-blue" />;
+        return <MessageSquare className="h-4 w-4 text-foreground" />;
       case 'watch-later':
-        return <Clock className="h-4 w-4 text-shark-purple" />;
+        return <Clock className="h-4 w-4 text-foreground" />;
       default:
         return null;
     }
@@ -56,7 +56,7 @@ const PitchCard: React.FC<PitchCardProps> = ({
           <Star
             key={i}
             className={`h-4 w-4 ${
-              i < rating ? 'text-shark-coral fill-shark-coral' : 'text-gray-300'
+              i < rating ? 'text-foreground fill-foreground' : 'text-gray-300'
             }`}
           />
         ))}
@@ -82,12 +82,12 @@ const PitchCard: React.FC<PitchCardProps> = ({
               />
             </div>
           ) : (
-            <div className="h-10 w-10 rounded bg-gradient-to-br from-shark-purple to-shark-blue flex items-center justify-center text-white font-bold">
+            <div className="h-10 w-10 rounded bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold">
               {companyName.charAt(0)}
             </div>
           )}
           <div>
-            <h3 className="font-semibold">{companyName}</h3>
+            <h3 className="font-semibold text-foreground">{companyName}</h3>
             <div className="flex items-center text-xs text-muted-foreground">
               {getTypeIcon()}
               <span className="ml-1 capitalize">
@@ -96,7 +96,7 @@ const PitchCard: React.FC<PitchCardProps> = ({
             </div>
           </div>
         </div>
-        <Badge variant="outline" className="bg-muted">
+        <Badge variant="outline" className="bg-muted text-muted-foreground">
           {category}
         </Badge>
       </CardHeader>
@@ -106,8 +106,8 @@ const PitchCard: React.FC<PitchCardProps> = ({
           {description}
         </p>
         <div className="flex justify-between items-center mt-3">
-          <span className="text-sm font-medium">
-            Ask: <span className="text-shark-purple">{askAmount}</span>
+          <span className="text-sm font-medium text-foreground">
+            Ask: <span className="text-accent">{askAmount}</span>
           </span>
           {renderRating()}
         </div>
@@ -117,7 +117,7 @@ const PitchCard: React.FC<PitchCardProps> = ({
         <Button
           variant="default"
           size="sm"
-          className="flex-1 bg-shark-blue hover:bg-shark-blue/90"
+          className="flex-1 bg-primary hover:bg-primary/90 text-white"
         >
           View Details
         </Button>

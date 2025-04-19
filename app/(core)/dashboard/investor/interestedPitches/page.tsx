@@ -103,7 +103,6 @@ const InterestedPitches: React.FC = () => {
   // Apply sorting
   switch (sortOption) {
     case 'oldest':
-      // In a real app, you would sort by date
       filteredPitches = [...filteredPitches].reverse();
       break;
     case 'highest':
@@ -148,7 +147,9 @@ const InterestedPitches: React.FC = () => {
           </div>
         ) : (
           <div className="text-center py-12">
-            <h3 className="text-lg font-medium">No pitches found</h3>
+            <h3 className="text-lg font-medium text-foreground">
+              No pitches found
+            </h3>
             <p className="text-muted-foreground">
               Try adjusting your search or filter criteria
             </p>
@@ -158,6 +159,7 @@ const InterestedPitches: React.FC = () => {
     </DashboardLayout>
   );
 };
+
 type PitchCardProps = {
   id: string;
   companyName: string;
@@ -171,4 +173,5 @@ type PitchCardProps = {
   className?: string;
   style?: React.CSSProperties;
 };
+
 export default InterestedPitches;
