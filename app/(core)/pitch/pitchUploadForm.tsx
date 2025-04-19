@@ -5,8 +5,11 @@ import { storage, db } from '@/lib/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
+import { useUser } from '@clerk/nextjs';
 
 export default function PitchUploadForm() {
+  const { user } = useUser();
+  // TODO : redirect if not a user
   const [form, setForm] = useState({
     name: '',
     tagline: '',
@@ -75,6 +78,7 @@ export default function PitchUploadForm() {
         ...form,
         videoUrl,
         thumbnailUrl,
+        userId: user?.id,
         createdAt: Timestamp.now(),
       });
 
