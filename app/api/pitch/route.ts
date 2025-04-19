@@ -55,7 +55,11 @@ export async function GET() {
     }
 
     const data = snapshot.val()
-    const pitches = Object.values(data)
+
+    const pitches = Object.entries(data).map(([id, pitch]) => ({
+      id,
+      ...pitch,
+    }))
 
     return NextResponse.json({ pitches }, { status: 200 })
   } catch (err) {
@@ -63,6 +67,7 @@ export async function GET() {
     return NextResponse.json({ error: 'Failed to fetch pitches' }, { status: 500 })
   }
 }
+
 
 
 // pitches
