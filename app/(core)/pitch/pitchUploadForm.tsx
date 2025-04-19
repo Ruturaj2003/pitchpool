@@ -78,7 +78,7 @@ export default function PitchUploadForm() {
         ...form,
         videoUrl,
         thumbnailUrl,
-        userId: user?.id,
+        // userId: user?.id,
         createdAt: Timestamp.now(),
       });
 

@@ -1,13 +1,13 @@
-'use client ';
-import { useSwipeable } from 'react-swipeable';
+'use client';
+
+import ReelsView from './_components/ReelsView';
 
 const FeedPage = () => {
-  const handlers = useSwipeable({
-    onSwipedLeft: () => console.log('Swiped left!'),
-    onSwipedRight: () => console.log('Swiped right!'),
-    onSwipedUp: () => console.log('Swiped up!'),
-    onSwipedDown: () => console.log('Swiped down!'),
-  });
-  return <div {...handlers}>FeedPage</div>;
+  return (
+    <div className="">
+      <ReelsView></ReelsView>
+    </div>
+  );
 };
+
 export default FeedPage;
