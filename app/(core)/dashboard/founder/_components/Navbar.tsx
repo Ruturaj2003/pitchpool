@@ -10,9 +10,7 @@ const Navbar = () => {
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <a href="/" className="text-xl font-bold text-primary">
-            PitchReels
-          </a>
+          <h1 className="text-xl font-bold text-primary">PitchReels</h1>
         </div>
 
         {/* User Button */}
