@@ -6,11 +6,15 @@ interface StatCardProps {
   value: string | number;
   icon: React.ReactNode;
   className?: string;
+  onClick?: () => void; // Added onClick prop
 }
 
-export function StatCard({ title, value, icon, className }: StatCardProps) {
+export function StatCard({ title, value, icon, className, onClick }: StatCardProps) {
   return (
-    <Card className={cn("bg-white/50 backdrop-blur-sm", className)}>
+    <Card 
+      className={cn("bg-white/50 backdrop-blur-sm cursor-pointer", className)} 
+      onClick={onClick} // Apply the onClick handler
+    >
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}

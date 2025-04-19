@@ -1,30 +1,30 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { ChevronLeft, Eye, MessageSquare, TrendingUp } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { ChevronLeft, Eye, MessageSquare, TrendingUp } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { StatCard } from './StatCard';
-import { AnalyticsChart } from './AnalyticsChart';
+import { Button } from "@/components/ui/button";
+import { StatCard } from "./StatCard";
+import { AnalyticsChart } from "./AnalyticsChart";
 
 const weeklyData: DailyData[] = [
-  { day: 'Mon', views: 24, interested: 12, comments: 5 },
-  { day: 'Tue', views: 35, interested: 15, comments: 7 },
-  { day: 'Wed', views: 45, interested: 25, comments: 10 },
-  { day: 'Thu', views: 30, interested: 18, comments: 6 },
-  { day: 'Fri', views: 55, interested: 32, comments: 12 },
-  { day: 'Sat', views: 20, interested: 9, comments: 3 },
-  { day: 'Sun', views: 15, interested: 5, comments: 2 },
+  { day: "Mon", views: 24, interested: 12, comments: 5 },
+  { day: "Tue", views: 35, interested: 15, comments: 7 },
+  { day: "Wed", views: 45, interested: 25, comments: 10 },
+  { day: "Thu", views: 30, interested: 18, comments: 6 },
+  { day: "Fri", views: 55, interested: 32, comments: 12 },
+  { day: "Sat", views: 20, interested: 9, comments: 3 },
+  { day: "Sun", views: 15, interested: 5, comments: 2 },
 ];
 
-export function ProductAnalytics() {
+export function ProductAnalytics({ pitchId }: { pitchId: string }) {
   const router = useRouter();
   const [analytics, setAnalytics] = useState<AnalyticsSummary>({
     views: 0,
     interested: 0,
     comments: 0,
-    peakDay: '',
+    peakDay: "",
   });
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export function ProductAnalytics() {
     let totalViews = 0;
     let totalInterested = 0;
     let totalComments = 0;
-    let peakDay = '';
+    let peakDay = "";
     let maxViews = -1;
 
     data.forEach((entry) => {
@@ -59,7 +59,7 @@ export function ProductAnalytics() {
   };
 
   return (
-    <div className="min-h-screen  bg-gradient-to-br from-background via-muted/20 to-secondary/10 px-4 py-6 sm:px-6 md:px-8 max-w-screen-xl mx-auto space-y-10 animate-fade-in">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-secondary/10 px-4 py-6 sm:px-6 md:px-8 max-w-screen-xl mx-auto space-y-10 animate-fade-in">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -98,23 +98,23 @@ export function ProductAnalytics() {
           title="Comments"
           value={analytics.comments.toString()}
           icon={<MessageSquare className="w-5 h-5 text-accent" />}
+          onClick={() => router.push(`/dashboard/founder/${pitchId}/comments`)} // Updated redirection to dynamic route
+          className="cursor-pointer hover:shadow-md transition"
         />
       </div>
 
-      {/* Chart Section - Responsive */}
+      {/* Chart Section */}
       <div className="bg-white/40 backdrop-blur-md p-4 rounded-xl border shadow-sm">
         <h2 className="text-lg font-semibold text-primary mb-2">
           Weekly Engagement Overview
         </h2>
-
-        {/* Show chart on medium and above, summary on small */}
         <div className="block sm:hidden text-muted-foreground text-sm">
           <p>
-            <strong>Peak Activity Day:</strong> {analytics.peakDay || 'N/A'}
+            <strong>Peak Activity Day:</strong> {analytics.peakDay || "N/A"}
           </p>
           <p className="mt-1">
-            Most users viewed your pitch on{' '}
-            <strong>{analytics.peakDay || 'a day this week'}</strong>. Keep the
+            Most users viewed your pitch on{" "}
+            <strong>{analytics.peakDay || "a day this week"}</strong>. Keep the
             momentum going!
           </p>
         </div>

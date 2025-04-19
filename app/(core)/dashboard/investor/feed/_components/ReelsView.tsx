@@ -49,11 +49,16 @@ const ReelsView = () => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
+<<<<<<< Updated upstream
   const handleSwipeLeft = () => {
     const currentReel = reels[currentIndex];
     if (currentReel) {
       router.push(`/pitch/${currentReel.id}/short`);
     }
+=======
+  const handleSwipeRight = () => {
+    router.push('ptich/{id}/details');
+>>>>>>> Stashed changes
   };
 
   if (reels.length === 0) {

@@ -1,27 +1,22 @@
+import { SharkComment } from "../_data/firebaseService";
 
-import { SharkComment } from "../data/mockComments";
-import { SharkCommentCard } from "./SharkCommentCard";
-
-interface CommentsListProps {
-  comments: SharkComment[];
+interface SharkCommentCardProps {
+  comment: SharkComment;
+  index: number;
 }
 
-export function CommentsList({ comments }: CommentsListProps) {
+export function CommentsList({ comment }: SharkCommentCardProps) {
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      {comments.map((comment, index) => (
-        <SharkCommentCard 
-          key={comment.id} 
-          comment={comment} 
-          index={index} 
-        />
-      ))}
-      
-      {comments.length === 0 && (
-        <div className="text-center py-16">
-          <p className="text-gray-500 dark:text-gray-400">No comments found.</p>
-        </div>
-      )}
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4">
+      <div className="flex items-center justify-between mb-2">
+        <p className="font-semibold text-gray-900 dark:text-white">
+          {comment.sharkName}
+        </p>
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          {new Date(comment.timestamp).toLocaleString()}
+        </p>
+      </div>
+      <p className="text-gray-800 dark:text-gray-200">{comment.comment}</p>
     </div>
   );
 }

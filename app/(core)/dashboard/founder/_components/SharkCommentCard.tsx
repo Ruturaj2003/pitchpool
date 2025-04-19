@@ -1,5 +1,4 @@
-
-import { SharkComment } from "../data/mockComments";
+import { SharkComment } from "../_data/mockComments";
 import { cn } from "@/lib/utils";
 import { ArrowUpRight, MessageCircle, UserRound } from "lucide-react";
 import { useState } from "react";
@@ -11,19 +10,25 @@ interface SharkCommentCardProps {
 
 export function SharkCommentCard({ comment, index }: SharkCommentCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-  
+
   const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   const openMessagingTab = (action: "connect" | "mentor") => {
-    const url = `/messaging?shark=${encodeURIComponent(comment.sharkName)}&action=${action}`;
-    window.open(url, '_blank');
+    const url = `/messaging?shark=${encodeURIComponent(
+      comment.sharkName
+    )}&action=${action}`;
+    window.open(url, "_blank");
   };
 
   return (
-    <div 
+    <div
       className={cn(
         "relative w-full rounded-xl p-6 mb-8",
         "bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800",
@@ -45,13 +50,13 @@ export function SharkCommentCard({ comment, index }: SharkCommentCardProps) {
       <div className="text-xs font-medium text-shark-blue mb-4 uppercase tracking-wider">
         {comment.pitchTitle}
       </div>
-      
+
       {/* Shark Info */}
       <div className="flex items-center mb-4">
         <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-shark-purple mr-3">
-          <img 
-            src={comment.sharkImage} 
-            alt={comment.sharkName} 
+          <img
+            src={comment.sharkImage}
+            alt={comment.sharkName}
             className="h-full w-full object-cover"
           />
         </div>
@@ -66,12 +71,12 @@ export function SharkCommentCard({ comment, index }: SharkCommentCardProps) {
           </div>
         </div>
       </div>
-      
+
       {/* Comment */}
       <div className="my-4 font-inter text-gray-700 dark:text-gray-300 leading-relaxed">
         "{comment.comment}"
       </div>
-      
+
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-3 mt-6">
         <button
@@ -86,7 +91,7 @@ export function SharkCommentCard({ comment, index }: SharkCommentCardProps) {
           Connect with Shark
           <ArrowUpRight size={16} className="ml-1" />
         </button>
-        
+
         <button
           onClick={() => openMessagingTab("mentor")}
           className={cn(
@@ -99,7 +104,7 @@ export function SharkCommentCard({ comment, index }: SharkCommentCardProps) {
           <ArrowUpRight size={16} className="ml-1" />
         </button>
       </div>
-      
+
       {/* Decorative gradient accent */}
       <div className="absolute top-0 right-0 h-16 w-16 rounded-tr-xl rounded-bl-3xl overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-shark-purple/30 via-shark-blue/20 to-shark-coral/10 opacity-70"></div>
