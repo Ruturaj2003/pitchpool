@@ -1,10 +1,10 @@
 // @ts-nocheck
-"use client";
-import React, { useState, useEffect } from "react";
-import { useSwipeable } from "react-swipeable";
-import { useRouter } from "next/navigation";
-import { db } from "@/lib/firebase"; // Make sure the correct path is used
-import { ref, set, remove, onValue } from "firebase/database";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { useSwipeable } from 'react-swipeable';
+import { useRouter } from 'next/navigation';
+import { db } from '@/lib/firebase'; // Make sure the correct path is used
+import { ref, set, remove, onValue } from 'firebase/database';
 
 // ICONS
 import {
@@ -27,24 +27,26 @@ import {
   Target,
   MessageCircle,
   X,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { motion, AnimatePresence } from "framer-motion";
-import InterestAction from "./_components/InterestAction";
+import { motion, AnimatePresence } from 'framer-motion';
+import InterestAction from './_components/InterestAction';
+import { useCommonStore } from '@/store/common';
 
 // Firebase pitch ID
-const PITCH_ID = "216c0bfc-4932-4d88-b4be-a97fb7923902";
 
 const DetailedPitchPage: React.FC = () => {
   const router = useRouter();
   const [startup, setStartup] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [openSection, setOpenSection] = useState("overview");
+  const [openSection, setOpenSection] = useState('overview');
   const [commentModalOpen, setCommentModalOpen] = useState(false);
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState('');
+
+  const pitchId = useCommonStore((state) => state.pitchId);
 
   useEffect(() => {
-    const pitchRef = ref(db, `pitches/${PITCH_ID}`);
+    const pitchRef = ref(db, `pitches/${pitchId}`);
     const unsubscribe = onValue(pitchRef, (snapshot) => {
       const data = snapshot.val();
       if (data) setStartup(data);
@@ -68,8 +70,8 @@ const DetailedPitchPage: React.FC = () => {
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitted comment:", comment);
-    setComment("");
+    console.log('Submitted comment:', comment);
+    setComment('');
     setCommentModalOpen(false);
   };
 
@@ -123,8 +125,8 @@ const DetailedPitchPage: React.FC = () => {
           id="overview"
           title="Business Overview"
           icon={<Building className="w-5 h-5" />}
-          isOpen={openSection === "overview"}
-          toggleOpen={() => toggleSection("overview")}
+          isOpen={openSection === 'overview'}
+          toggleOpen={() => toggleSection('overview')}
         >
           <div className="grid grid-cols-1 gap-4">
             <InfoCard
@@ -149,8 +151,8 @@ const DetailedPitchPage: React.FC = () => {
           id="market"
           title="Market & Opportunity"
           icon={<Globe className="w-5 h-5" />}
-          isOpen={openSection === "market"}
-          toggleOpen={() => toggleSection("market")}
+          isOpen={openSection === 'market'}
+          toggleOpen={() => toggleSection('market')}
         >
           <div className="grid grid-cols-1 gap-4">
             <InfoCard
@@ -175,8 +177,8 @@ const DetailedPitchPage: React.FC = () => {
           id="team"
           title="Team"
           icon={<Users className="w-5 h-5" />}
-          isOpen={openSection === "team"}
-          toggleOpen={() => toggleSection("team")}
+          isOpen={openSection === 'team'}
+          toggleOpen={() => toggleSection('team')}
         >
           <InfoCard
             title="Team Members"
@@ -189,8 +191,8 @@ const DetailedPitchPage: React.FC = () => {
           id="investment"
           title="Investment Opportunity"
           icon={<Target className="w-5 h-5" />}
-          isOpen={openSection === "investment"}
-          toggleOpen={() => toggleSection("investment")}
+          isOpen={openSection === 'investment'}
+          toggleOpen={() => toggleSection('investment')}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <InfoCard
@@ -228,7 +230,7 @@ const DetailedPitchPage: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              transition={{ type: "spring", damping: 25, stiffness: 500 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 500 }}
               className="bg-white bg-opacity-70 backdrop-blur-md border border-white border-opacity-20 rounded-xl shadow-xl p-6 w-full max-w-lg relative z-10"
               onClick={(e) => e.stopPropagation()}
             >
@@ -278,8 +280,8 @@ const ActionButton = ({ icon, label, primary, onClick }) => (
   <button
     onClick={onClick}
     className={`py-2 px-4 rounded-lg border flex items-center gap-2 ${
-      primary ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-700"
-    } hover:${primary ? "bg-indigo-700" : "bg-gray-200"} transition-all`}
+      primary ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700'
+    } hover:${primary ? 'bg-indigo-700' : 'bg-gray-200'} transition-all`}
   >
     {icon}
     <span className="text-sm">{label}</span>

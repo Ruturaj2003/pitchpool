@@ -1,16 +1,18 @@
 // @ts-nocheck
-"use client";
-import { useSwipeable } from "react-swipeable";
-import React, { useEffect, useState } from "react";
-import { Heart, Bookmark, MessageCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { db } from "@/lib/firebase"; // Make sure the correct path is used
-import { ref, get } from "firebase/database"; // Import the necessary Firebase methods
+'use client';
+import { useSwipeable } from 'react-swipeable';
+import React, { useEffect, useState } from 'react';
+import { Heart, Bookmark, MessageCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { db } from '@/lib/firebase'; // Make sure the correct path is used
+import { ref, get } from 'firebase/database'; // Import the necessary Firebase methods
+import { useCommonStore } from '@/store/common';
 
 const ShortDetailPage = () => {
   const [startup, setStartup] = useState(null); // State to store fetched pitch details
   const router = useRouter();
-  const pitchId = "216c0bfc-4932-4d88-b4be-a97fb7923902"; // The specific pitch ID provided
+  // The specific pitch ID provided
+  const pitch = useCommonStore((state) => state.pitchId);
 
   useEffect(() => {
     // Fetch pitch data from Firebase
@@ -20,7 +22,7 @@ const ShortDetailPage = () => {
       if (snapshot.exists()) {
         setStartup(snapshot.val()); // Set the pitch details to the state
       } else {
-        console.log("No data available for this pitch.");
+        console.log('No data available for this pitch.');
       }
     };
 
@@ -102,7 +104,7 @@ const ShortDetailPage = () => {
 };
 
 // Detail Component
-const Detail = ({ label, value, className = "" }) => (
+const Detail = ({ label, value, className = '' }) => (
   <div className="flex flex-col space-y-1">
     <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
       {label}
@@ -118,8 +120,8 @@ const Button = ({ icon, label, primary }) => (
     className={`w-full py-3 px-4 rounded-lg flex items-center justify-center space-x-2 
     ${
       primary
-        ? "bg-purple-600 hover:bg-purple-700 text-white"
-        : "bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300"
+        ? 'bg-purple-600 hover:bg-purple-700 text-white'
+        : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
     } 
     text-base font-medium transition-all duration-200`}
   >
