@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import ReelCard from "./ReelCard";
-import { ref, get } from "firebase/database";
-import { db } from "@/lib/firebase"; // Importing db from firebase.ts
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import ReelCard from './ReelCard';
+import { ref, get } from 'firebase/database';
+import { db } from '@/lib/firebase'; // Importing db from firebase.ts
+import { useCommonStore } from '@/store/common';
 
 interface Reel {
   id: string;
@@ -19,27 +20,27 @@ const ReelsView = () => {
   const [reels, setReels] = useState<Reel[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const router = useRouter();
-
+  const { pitchId, setCurrentPitch } = useCommonStore();
   useEffect(() => {
     // Fetching data from Firebase Realtime Database
     const fetchReels = async () => {
-      const reelsRef = ref(db, "pitches"); // Reference to the "pitches" node
+      const reelsRef = ref(db, 'pitches'); // Reference to the "pitches" node
       const snapshot = await get(reelsRef);
       if (snapshot.exists()) {
         const data = snapshot.val();
         const fetchedReels: Reel[] = Object.entries(data).map(
           ([id, pitch]: any) => ({
             id,
-            videoUrl: pitch.videoUrl ?? "/fallback.mp4",
+            videoUrl: pitch.videoUrl ?? '/fallback.mp4',
             productName: pitch.name,
             description: pitch.description,
             founderName: pitch.founderName,
-            thumbnailUrl: pitch.thumbnailUrl ?? "/placeholder.svg",
+            thumbnailUrl: pitch.thumbnailUrl ?? '/placeholder.svg',
           })
         );
         setReels(fetchedReels);
       } else {
-        console.log("No data available");
+        console.log('No data available');
       }
     };
 
@@ -56,7 +57,12 @@ const ReelsView = () => {
 
   const handleSwipeLeft = () => {
     const currentReel = reels[currentIndex];
+
     if (currentReel) {
+      const pitch = {
+        id: currentReel.id,
+      };
+      setCurrentPitch(pitch);
       router.push(`/pitch/${currentReel.id}/short`);
     }
   };

@@ -4,12 +4,12 @@ interface Pitch {
   id: string;
 }
 
-interface PitchStore {
+interface CommonStore {
   pitchId: Pitch | null;
   setCurrentPitch: (pitch: Pitch) => void;
 }
 
-export const usePitchStore = create<PitchStore>((set) => ({
+export const useCommonStore = create<CommonStore>((set) => ({
   pitchId: null,
   setCurrentPitch: (pitch) => set({ pitchId: pitch }),
 }));
