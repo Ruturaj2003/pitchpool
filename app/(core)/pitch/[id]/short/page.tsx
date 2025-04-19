@@ -11,6 +11,8 @@ import { useCommonStore } from '@/store/common';
 const ShortDetailPage = () => {
   const [startup, setStartup] = useState(null); // State to store fetched pitch details
   const router = useRouter();
+  const user = useUser();
+  const userId = user.id;
   // The specific pitch ID provided
   const pitchId = useCommonStore((state) => state.pitchId);
 
@@ -48,6 +50,9 @@ const ShortDetailPage = () => {
   if (!startup) {
     return <p>Loading pitch details...</p>; // Show loading text until data is fetched
   }
+
+  function handleInterested() {}
+  function handleSaveLater() {}
 
   return (
     <main
@@ -88,11 +93,13 @@ const ShortDetailPage = () => {
         {/* Action Buttons */}
         <div className="flex space-x-4 mt-8">
           <Button
+            onClick={handleInterested}
             icon={<Heart className="w-5 h-5" />}
             label="I'm Interested"
             primary={true}
           />
           <Button
+            onClick={handleSaveLater}
             icon={<Bookmark className="w-5 h-5" />}
             label="Save for Later"
             primary={false}
