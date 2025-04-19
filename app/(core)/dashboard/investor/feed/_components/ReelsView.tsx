@@ -20,13 +20,13 @@ const DUMMY_REELS: Reel[] = [
   },
   {
     id: 2,
-    videoUrl: '/vid.mp4',
+    videoUrl: '/vid2.mp4',
     productName: 'Smart Device X',
     description: 'Revolutionary smart device for modern living',
   },
   {
     id: 3,
-    videoUrl: '/vid.mp4',
+    videoUrl: '/vid3.mp4',
     productName: 'Digital Assistant',
     description: 'Your personal AI companion',
   },
