@@ -2,14 +2,13 @@
 
 import { useState } from 'react';
 import { storage, db } from '@/lib/firebase';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref as dbRef, set } from 'firebase/database'; // ✅ Realtime DB imports
 import { v4 as uuidv4 } from 'uuid';
 import { useUser } from '@clerk/nextjs';
 
 export default function PitchUploadForm() {
   const { user } = useUser();
-  // TODO : redirect if not a user
   const [form, setForm] = useState({
     name: '',
     tagline: '',
@@ -66,20 +65,23 @@ export default function PitchUploadForm() {
     const id = uuidv4();
 
     try {
-      const videoRef = ref(storage, `pitches/${id}/video.mp4`);
-      await uploadBytes(videoRef, videoFile);
-      const videoUrl = await getDownloadURL(videoRef);
+      // Upload video
+      const videoStorageRef = storageRef(storage, `pitches/${id}/video.mp4`);
+      await uploadBytes(videoStorageRef, videoFile);
+      const videoUrl = await getDownloadURL(videoStorageRef);
 
-      const thumbRef = ref(storage, `pitches/${id}/thumbnail.jpg`);
-      await uploadBytes(thumbRef, thumbnailFile);
-      const thumbnailUrl = await getDownloadURL(thumbRef);
+      // Upload thumbnail
+      const thumbnailStorageRef = storageRef(storage, `pitches/${id}/thumbnail.jpg`);
+      await uploadBytes(thumbnailStorageRef, thumbnailFile);
+      const thumbnailUrl = await getDownloadURL(thumbnailStorageRef);
 
-      await addDoc(collection(db, 'pitches'), {
+      // Upload metadata to Realtime Database
+      await set(dbRef(db, `pitches/${id}`), {
         ...form,
         videoUrl,
         thumbnailUrl,
-        userId: user?.id,
-        createdAt: Timestamp.now(),
+        userId: user?.id || null,
+        createdAt: Date.now(),
       });
 
       alert('Pitch uploaded successfully!');
@@ -125,46 +127,12 @@ export default function PitchUploadForm() {
       <section>
         <h3 className="text-lg font-semibold mb-4">Startup Info</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            name="name"
-            label="Startup Name"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
-          <Input
-            name="tagline"
-            label="Tagline"
-            value={form.tagline}
-            onChange={handleChange}
-            required
-          />
-          <Input
-            name="sector"
-            label="Sector"
-            value={form.sector}
-            onChange={handleChange}
-            required
-          />
-          <Input
-            name="founderName"
-            label="Founder Name"
-            value={form.founderName}
-            onChange={handleChange}
-            required
-          />
-          <Input
-            name="founderTitle"
-            label="Founder Title"
-            value={form.founderTitle}
-            onChange={handleChange}
-          />
-          <Input
-            name="founderPhotoUrl"
-            label="Founder Photo URL"
-            value={form.founderPhotoUrl}
-            onChange={handleChange}
-          />
+          <Input name="name" label="Startup Name" value={form.name} onChange={handleChange} required />
+          <Input name="tagline" label="Tagline" value={form.tagline} onChange={handleChange} required />
+          <Input name="sector" label="Sector" value={form.sector} onChange={handleChange} required />
+          <Input name="founderName" label="Founder Name" value={form.founderName} onChange={handleChange} required />
+          <Input name="founderTitle" label="Founder Title" value={form.founderTitle} onChange={handleChange} />
+          <Input name="founderPhotoUrl" label="Founder Photo URL" value={form.founderPhotoUrl} onChange={handleChange} />
         </div>
         <div className="mt-4">
           <label className="block mb-1 font-medium">Short Description</label>
