@@ -1,8 +1,11 @@
-"use client";
+'use client';
 
-import React, { useRef, useState } from "react";
-import { useSwipeable } from "react-swipeable";
-import { Pause, Play, ArrowRight } from "lucide-react";
+import React, { useRef, useState } from 'react';
+import { useSwipeable } from 'react-swipeable';
+import { Pause, Play, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 interface ReelCardProps {
   videoUrl: string;
@@ -23,6 +26,7 @@ const ReelCard: React.FC<ReelCardProps> = ({
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
+  const router = useRouter();
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -73,7 +77,13 @@ const ReelCard: React.FC<ReelCardProps> = ({
       {/* Top Nav */}
       <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-black/30 backdrop-blur-md">
         <h1 className="text-white text-lg font-semibold tracking-wide">
-          Pitch Reels
+          <Button
+            onClick={() => router.push('/dashboard/investor/interestedPitches')}
+            variant={'ghost'}
+          >
+            {' '}
+            Pitch Reels
+          </Button>
         </h1>
         <div className="text-white text-sm opacity-70">Swipe to explore</div>
       </div>
