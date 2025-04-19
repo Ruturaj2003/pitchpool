@@ -95,11 +95,11 @@ export function ProductList() {
             key={product.id}
             className="rounded-2xl bg-gradient-to-br from-muted/20 via-secondary/10 to-accent/10 shadow-md transition hover:shadow-xl hover:scale-[1.02] duration-300 ease-in-out"
           >
-            <CardHeader className="p-0 rounded-t-2xl overflow-hidden">
+            <CardHeader className="p-0 pr-3 pl-3 rounded-t-2xl overflow-hidden">
               <img
                 src={product.imageUrl}
                 alt={product.name}
-                className="w-full h-48 object-cover"
+                className="w-full h-48 object-cover roundeed-lg"
               />
             </CardHeader>
             <CardContent className="space-y-2 p-4">

@@ -13,8 +13,8 @@ const SignInPage = () => {
     const role = sessionStorage.getItem('user_role');
 
     if (isSignedIn) {
-      if (role === 'founder') router.push('/founder-dashboard');
-      else if (role === 'investor') router.push('/investor-dashboard');
+      if (role === 'founder') router.push('/dashboard/founder');
+      else if (role === 'investor') router.push('/dashboard/investor');
       else router.replace('/');
     } else {
       // Set redirect URL based on role
