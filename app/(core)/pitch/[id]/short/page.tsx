@@ -12,12 +12,12 @@ const ShortDetailPage = () => {
   const [startup, setStartup] = useState(null); // State to store fetched pitch details
   const router = useRouter();
   // The specific pitch ID provided
-  const pitch = useCommonStore((state) => state.pitchId);
+  const pitchId = useCommonStore((state) => state.pitchId);
 
   useEffect(() => {
     // Fetch pitch data from Firebase
     const fetchPitchDetails = async () => {
-      const pitchRef = ref(db, `pitches/${pitchId}`); // Path to the specific pitch ID in Firebase
+      const pitchRef = ref(db, `pitches/${pitchId?.id}`); // Path to the specific pitch ID in Firebase
       const snapshot = await get(pitchRef);
       if (snapshot.exists()) {
         setStartup(snapshot.val()); // Set the pitch details to the state
