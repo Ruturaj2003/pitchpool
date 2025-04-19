@@ -46,7 +46,7 @@ const DetailedPitchPage: React.FC = () => {
   const pitchId = useCommonStore((state) => state.pitchId);
 
   useEffect(() => {
-    const pitchRef = ref(db, `pitches/${pitchId}`);
+    const pitchRef = ref(db, `pitches/${pitchId?.id}`);
     const unsubscribe = onValue(pitchRef, (snapshot) => {
       const data = snapshot.val();
       if (data) setStartup(data);
