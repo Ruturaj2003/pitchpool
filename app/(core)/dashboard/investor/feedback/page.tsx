@@ -1,12 +1,9 @@
+'use client';
 import React, { useState } from 'react';
 import DashboardLayout from '../_components/layout/DashboardLayout';
 import PitchCard from '../_components/dashboard/PitchCard';
 import PitchFilter from '../_components/dashboard/PitchFilter';
-// import DashboardLayout from '@/components/layout/DashboardLayout';
-// import PitchCard, { PitchCardProps } from '@/components/dashboard/PitchCard';
-// import PitchFilter from '@/components/dashboard/PitchFilter';
 
-// Mock data - in a real app, this would come from an API
 const mockPitches: Omit<PitchCardProps, 'type'>[] = [
   {
     id: '1',
