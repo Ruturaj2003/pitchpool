@@ -1,8 +1,8 @@
 'use client';
 import React, { useState } from 'react';
-import DashboardLayout from '../_components/layout/DashboardLayout';
-import PitchCard from '../_components/dashboard/PitchCard';
-import PitchFilter from '../_components/dashboard/PitchFilter';
+import DashboardLayout from '../../_components/layout/DashboardLayout';
+import PitchCard from '../../_components/dashboard/PitchCard';
+import PitchFilter from '../../_components/dashboard/PitchFilter';
 
 const mockPitches: Omit<PitchCardProps, 'type'>[] = [
   {
