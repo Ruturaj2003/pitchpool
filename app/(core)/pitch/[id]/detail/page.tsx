@@ -1,11 +1,11 @@
 // @ts-nocheck
 'use client';
+
 import React, { useState, useEffect } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase'; // Make sure the correct path is used
 import { ref, set, remove, onValue } from 'firebase/database';
-
 // ICONS
 import {
   ArrowRight,
@@ -32,6 +32,9 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import InterestAction from './_components/InterestAction';
 import { useCommonStore } from '@/store/common';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useUser } from '@clerk/nextjs';
 
 // Firebase pitch ID
 
@@ -42,7 +45,8 @@ const DetailedPitchPage: React.FC = () => {
   const [openSection, setOpenSection] = useState('overview');
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [comment, setComment] = useState('');
-
+  const { user } = useUser();
+  const userId = user.id;
   const pitchId = useCommonStore((state) => state.pitchId);
 
   useEffect(() => {
@@ -92,13 +96,24 @@ const DetailedPitchPage: React.FC = () => {
   const toggleSection = (sectionId) =>
     setOpenSection(openSection === sectionId ? null : sectionId);
 
-  const handleCommentSubmit = (e) => {
+  const handleCommentSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitted comment:', comment);
-    setComment('');
-    setCommentModalOpen(false);
-  };
 
+    try {
+      await axios.post('/api/pitch/comment', {
+        userId, // Make sure userId is available in your component
+        pitchId: pitchId.id, // Replace with actual pitch ID
+        comment, // The comment text from your input
+      });
+
+      toast.success('Comment submitted!');
+      setComment('');
+      setCommentModalOpen(false);
+    } catch (error) {
+      toast.error('Failed to submit comment');
+      console.error('Comment submit error:', error);
+    }
+  };
   if (loading) return <div className="text-center mt-20">Loading pitch...</div>;
   if (!startup)
     return (
@@ -137,9 +152,12 @@ const DetailedPitchPage: React.FC = () => {
             label="Interest"
             primary
           />
-          <ActionButton icon={<Bookmark className="w-5 h-5" />} label="Save" />
           <ActionButton
             onClick={handleSaveLater}
+            icon={<Bookmark className="w-5 h-5" />}
+            label="Save"
+          />
+          <ActionButton
             icon={<MessageCircle className="w-5 h-5" />}
             label="Add Feedback"
             onClick={() => setCommentModalOpen(true)}
