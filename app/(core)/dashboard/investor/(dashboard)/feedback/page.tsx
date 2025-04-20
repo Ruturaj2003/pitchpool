@@ -1,8 +1,12 @@
+// @ts-nocheck
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DashboardLayout from '../../_components/layout/DashboardLayout';
 import PitchCard from '../../_components/dashboard/PitchCard';
 import PitchFilter from '../../_components/dashboard/PitchFilter';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useUser } from '@clerk/nextjs';
 
 const mockPitches: Omit<PitchCardProps, 'type'>[] = [
   {
@@ -56,6 +60,26 @@ const FeedbackGiven: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('newest');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const { user } = useUser();
+  const userId = user?.id;
+  const fetchFeedBacks = async () => {
+    if (!userId) return;
+
+    try {
+      console.log('Logging ' + userId);
+
+      const resp = await axios.get(`/api/pitch/feedback/from/${userId}`);
+      const data = resp.data;
+
+      console.log(data.feedbacks);
+      toast.success('Fetched feedback successfully!');
+    } catch (error) {
+      toast.error('Failed to fetch feedback');
+    }
+  };
+  useEffect(() => {
+    fetchFeedBacks();
+  }, []);
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);

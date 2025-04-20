@@ -1,6 +1,6 @@
-import { db } from "@/lib/firebase";
-import { ref, get } from "firebase/database";
-import { NextResponse } from "next/server";
+import { db } from '@/lib/firebase';
+import { ref, get } from 'firebase/database';
+import { NextResponse } from 'next/server';
 
 export async function GET(
   _: Request,
@@ -10,7 +10,7 @@ export async function GET(
     const { investorId } = params;
     if (!investorId) {
       return NextResponse.json(
-        { error: "Investor ID is required" },
+        { error: 'Investor ID is required' },
         { status: 400 }
       );
     }
@@ -24,9 +24,9 @@ export async function GET(
 
     return NextResponse.json({ feedbacks: snapshot.val() }, { status: 200 });
   } catch (err) {
-    console.error("Error fetching feedback from investor:", err);
+    console.error('Error fetching feedback from investor:', err);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }
