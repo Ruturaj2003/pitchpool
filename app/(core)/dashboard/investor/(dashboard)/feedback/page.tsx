@@ -7,6 +7,9 @@ import PitchFilter from '../../_components/dashboard/PitchFilter';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useUser } from '@clerk/nextjs';
+import PCard from '../_components/PCard';
+
+// pitch id , Founder Name , FounderUrl, Message  ,Date ,  and View Detail Button , Badge of Field
 
 const mockPitches: Omit<PitchCardProps, 'type'>[] = [
   {
@@ -156,7 +159,8 @@ const FeedbackGiven: React.FC = () => {
           onFilterChange={handleFilterChange}
         />
 
-        {filteredPitches.length > 0 ? (
+        <PCard></PCard>
+        {/* {filteredPitches.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPitches.map((pitch, index) => (
               <PitchCard
@@ -174,7 +178,7 @@ const FeedbackGiven: React.FC = () => {
               Try adjusting your search or filter criteria
             </p>
           </div>
-        )}
+        )} */}
       </div>
     </DashboardLayout>
   );
