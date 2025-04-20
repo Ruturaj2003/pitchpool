@@ -1,68 +1,68 @@
 // @ts-nocheck
-'use client';
-import React, { useEffect, useState } from 'react';
-import DashboardLayout from '../../_components/layout/DashboardLayout';
-import PitchCard from '../../_components/dashboard/PitchCard';
-import PitchFilter from '../../_components/dashboard/PitchFilter';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { useUser } from '@clerk/nextjs';
-import PCard from '../_components/PCard';
+"use client";
+import React, { useEffect, useState } from "react";
+import DashboardLayout from "../../_components/layout/DashboardLayout";
+import PitchCard from "../../_components/dashboard/PitchCard";
+import PitchFilter from "../../_components/dashboard/PitchFilter";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useUser } from "@clerk/nextjs";
+import PCard from "../_components/PCard";
 
 // pitch id , Founder Name , FounderUrl, Message  ,Date ,  and View Detail Button , Badge of Field
 
-const mockPitches: Omit<PitchCardProps, 'type'>[] = [
+const mockPitches: Omit<PitchCardProps, "type">[] = [
   {
-    id: '1',
-    companyName: 'CyberShield',
+    id: "1",
+    companyName: "CyberShield",
     description:
-      'Enterprise-grade cybersecurity platform that uses AI to predict and prevent threats before they occur. Our solution has reduced security incidents by 75% for Fortune 500 companies.',
-    category: 'Tech',
-    askAmount: '$4M',
+      "Enterprise-grade cybersecurity platform that uses AI to predict and prevent threats before they occur. Our solution has reduced security incidents by 75% for Fortune 500 companies.",
+    category: "Tech",
+    askAmount: "$4M",
     rating: 4,
   },
   {
-    id: '2',
-    companyName: 'MindfulAI',
+    id: "2",
+    companyName: "MindfulAI",
     description:
-      'Mental health platform combining AI therapy chatbots with human therapist oversight, making mental healthcare accessible and affordable for everyone.',
-    category: 'Health',
-    askAmount: '$2M',
+      "Mental health platform combining AI therapy chatbots with human therapist oversight, making mental healthcare accessible and affordable for everyone.",
+    category: "Health",
+    askAmount: "$2M",
     rating: 3,
   },
   {
-    id: '3',
-    companyName: 'EcoCharge',
+    id: "3",
+    companyName: "EcoCharge",
     description:
-      'Revolutionary battery technology that extends the range of electric vehicles by 60% while reducing charging time to under 10 minutes.',
-    category: 'CleanTech',
-    askAmount: '$5M',
+      "Revolutionary battery technology that extends the range of electric vehicles by 60% while reducing charging time to under 10 minutes.",
+    category: "CleanTech",
+    askAmount: "$5M",
     rating: 5,
   },
   {
-    id: '4',
-    companyName: 'UrbanFarms',
+    id: "4",
+    companyName: "UrbanFarms",
     description:
-      'Indoor farming technology for urban environments that grows organic produce with 80% less water and no pesticides, right in city centers.',
-    category: 'AgTech',
-    askAmount: '$1.5M',
+      "Indoor farming technology for urban environments that grows organic produce with 80% less water and no pesticides, right in city centers.",
+    category: "AgTech",
+    askAmount: "$1.5M",
     rating: 3,
   },
   {
-    id: '5',
-    companyName: 'DataEthics',
+    id: "5",
+    companyName: "DataEthics",
     description:
-      'Platform for businesses to ensure ethical AI implementation with comprehensive bias detection and transparency tools.',
-    category: 'Tech',
-    askAmount: '$2.2M',
+      "Platform for businesses to ensure ethical AI implementation with comprehensive bias detection and transparency tools.",
+    category: "Tech",
+    askAmount: "$2.2M",
     rating: 4,
   },
 ];
 
 const FeedbackGiven: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortOption, setSortOption] = useState('newest');
-  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOption, setSortOption] = useState("newest");
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const { user } = useUser();
   const userId = user?.id;
 
@@ -77,8 +77,8 @@ const FeedbackGiven: React.FC = () => {
       const entries = Object.entries(data.feedbacks || {});
       const formattedFeedbacks = entries.map(([id, fb]: any) => ({
         pitchId: fb.pitchId || id,
-        founderName: fb.founderName || 'Unknown Company',
-        description: fb.message || 'No feedback description',
+        founderName: fb.founderName || "Unknown Company",
+        description: fb.message || "No feedback description",
       }));
 
       // Step 2: Fetch full pitch data for each feedback
@@ -90,18 +90,18 @@ const FeedbackGiven: React.FC = () => {
         // Step 3: Combine feedback and pitch data
         pitchArray.push({
           pitchId: fullPitchData.id,
-          founderName: fullPitchData.founderName || 'Unknown Founder',
-          founderUrl: fullPitchData.founderUrl || 'https://example.com',
+          founderName: fullPitchData.founderName || "Unknown Founder",
+          founderUrl: fullPitchData.founderUrl || "https://example.com",
           message: feedback.description, // Feedback's message
-          fieldBadge: fullPitchData.category || 'Uncategorized',
-          date: fullPitchData.date || '24/11/24',
+          fieldBadge: fullPitchData.category || "Uncategorized",
+          date: fullPitchData.date || "24/11/24",
         });
       }
       console.log(pitchArray);
 
       return pitchArray; // Return the final array with all required data
     } catch (error) {
-      console.error('Error in fetching data:', error);
+      console.error("Error in fetching data:", error);
       return [];
     }
   };
@@ -152,7 +152,7 @@ const FeedbackGiven: React.FC = () => {
   }
 
   // Category filter
-  if (categoryFilter !== 'all') {
+  if (categoryFilter !== "all") {
     filteredPitches = filteredPitches.filter(
       (pitch) => pitch.category.toLowerCase() === categoryFilter.toLowerCase()
     );
@@ -160,22 +160,22 @@ const FeedbackGiven: React.FC = () => {
 
   // Apply sorting
   switch (sortOption) {
-    case 'oldest':
+    case "oldest":
       // In a real app, you would sort by date
       filteredPitches = [...filteredPitches].reverse();
       break;
-    case 'highest':
+    case "highest":
       filteredPitches = [...filteredPitches].sort(
         (a, b) =>
-          parseInt(b.askAmount.replace(/\D/g, '')) -
-          parseInt(a.askAmount.replace(/\D/g, ''))
+          parseInt(b.askAmount.replace(/\D/g, "")) -
+          parseInt(a.askAmount.replace(/\D/g, ""))
       );
       break;
-    case 'lowest':
+    case "lowest":
       filteredPitches = [...filteredPitches].sort(
         (a, b) =>
-          parseInt(a.askAmount.replace(/\D/g, '')) -
-          parseInt(b.askAmount.replace(/\D/g, ''))
+          parseInt(a.askAmount.replace(/\D/g, "")) -
+          parseInt(b.askAmount.replace(/\D/g, ""))
       );
       break;
     default:
@@ -236,7 +236,7 @@ type PitchCardProps = {
   rating?: number;
   logo?: string;
   isBookmarked?: boolean;
-  type: 'watch-later' | 'interested' | 'feedback';
+  type: "watch-later" | "interested" | "feedback";
   className?: string;
   style?: React.CSSProperties;
 };

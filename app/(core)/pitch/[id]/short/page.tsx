@@ -1,16 +1,41 @@
 // @ts-nocheck
-'use client';
+"use client";
 
-import { useSwipeable } from 'react-swipeable';
-import React, { useEffect, useState } from 'react';
-import { Heart, Bookmark } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { db } from '@/lib/firebase';
-import { ref, get } from 'firebase/database';
-import { useCommonStore } from '@/store/common';
-import { toast } from 'react-toastify';
-import axios from 'axios'; // ✅ Make sure axios is imported
-import { useUser } from '@clerk/nextjs'; // ✅ Assuming Clerk is used for auth
+import React, { useEffect, useState } from "react";
+import { useSwipeable } from "react-swipeable";
+import { useRouter } from "next/navigation";
+import { ref, get } from "firebase/database";
+import { db } from "@/lib/firebase";
+import { useCommonStore } from "@/store/common";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useUser } from "@clerk/nextjs";
+import { Heart, Bookmark } from "lucide-react";
+
+// 🔁 Reusable function to increment pitch views
+const incrementPitchView = async (pitchId: string) => {
+  if (!pitchId) return;
+
+  try {
+    const response = await fetch("/api/pitch/views", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ pitchId }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Failed to increment views:", data.error);
+    } else {
+      console.log("View count updated:", data.message);
+    }
+  } catch (error) {
+    console.error("Error calling view increment API:", error);
+  }
+};
 
 const ShortDetailPage = () => {
   const [startup, setStartup] = useState(null);
@@ -21,17 +46,23 @@ const ShortDetailPage = () => {
 
   useEffect(() => {
     const fetchPitchDetails = async () => {
-      const pitchRef = ref(db, `pitches/${pitchId?.id}`);
+      if (!pitchId?.id) return;
+
+      const pitchRef = ref(db, `pitches/${pitchId.id}`);
       const snapshot = await get(pitchRef);
+
       if (snapshot.exists()) {
         setStartup(snapshot.val());
+
+        // 👁️ Increment view count
+        incrementPitchView(pitchId.id);
       } else {
-        console.log('No data available for this pitch.');
+        console.log("No data available for this pitch.");
       }
     };
 
     fetchPitchDetails();
-  }, []);
+  }, [pitchId?.id]);
 
   const handlers = useSwipeable({
     onSwipedRight: () => router.back(),
@@ -43,29 +74,35 @@ const ShortDetailPage = () => {
 
   const handleInterested = async () => {
     try {
-      await axios.post('/api/interested', {
+      await axios.post("/api/interested", {
         userId,
         pitchId: pitchId.id,
       });
-      toast.success('Marked as Interested');
+      toast.success("Marked as Interested");
     } catch (error) {
-      toast.error('Failed to mark as Interested');
+      toast.error("Failed to mark as Interested");
     }
   };
 
   const handleSaveLater = async () => {
     try {
-      await axios.post('/api/watchlater', {
+      await axios.post("/api/watchlater", {
         investorId: userId,
         pitchId: pitchId.id,
       });
-      toast.success('Saved for later');
+      toast.success("Saved for later");
     } catch (error) {
-      toast.error('Failed to save for later');
+      toast.error("Failed to save for later");
     }
   };
 
-  if (!startup) return <p>Loading pitch details...</p>;
+  if (!startup) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-500 to-blue-400 text-white text-xl">
+        Loading pitch details...
+      </main>
+    );
+  }
 
   return (
     <main
@@ -74,7 +111,7 @@ const ShortDetailPage = () => {
     >
       <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-blue-400 opacity-50 backdrop-blur-lg"></div>
 
-      <div className="w-full max-w-lg p-8 bg-white bg-opacity-40 backdrop-blur-lg rounded-xl shadow-xl space-y-6">
+      <div className="w-full max-w-lg p-8 bg-white bg-opacity-40 backdrop-blur-lg rounded-xl shadow-xl space-y-6 relative z-10">
         <h1 className="text-3xl font-bold text-center text-gray-800 tracking-tight">
           {startup.name}
         </h1>
@@ -116,7 +153,8 @@ const ShortDetailPage = () => {
   );
 };
 
-const Detail = ({ label, value, className = '' }) => (
+// 👇 Reusable UI components
+const Detail = ({ label, value, className = "" }) => (
   <div className="flex flex-col space-y-1">
     <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
       {label}
@@ -132,8 +170,8 @@ const Button = ({ icon, label, primary = false, onClick }) => (
     className={`w-full py-3 px-4 rounded-lg flex items-center justify-center space-x-2 
       ${
         primary
-          ? 'bg-purple-600 hover:bg-purple-700 text-white'
-          : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
+          ? "bg-purple-600 hover:bg-purple-700 text-white"
+          : "bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300"
       }
       text-base font-medium transition-all duration-200`}
   >
