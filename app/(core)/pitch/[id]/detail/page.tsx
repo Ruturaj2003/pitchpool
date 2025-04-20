@@ -65,6 +65,30 @@ const DetailedPitchPage: React.FC = () => {
     trackTouch: true,
   });
 
+  const handleInterested = async () => {
+    try {
+      await axios.post('/api/interested', {
+        userId,
+        pitchId: pitchId.id,
+      });
+      toast.success('Marked as Interested');
+    } catch (error) {
+      toast.error('Failed to mark as Interested');
+    }
+  };
+
+  const handleSaveLater = async () => {
+    try {
+      await axios.post('/api/watchlater', {
+        investorId: userId,
+        pitchId: pitchId.id,
+      });
+      toast.success('Saved for later');
+    } catch (error) {
+      toast.error('Failed to save for later');
+    }
+  };
+
   const toggleSection = (sectionId) =>
     setOpenSection(openSection === sectionId ? null : sectionId);
 
@@ -108,12 +132,14 @@ const DetailedPitchPage: React.FC = () => {
         {/* Action Bar */}
         <div className="sticky top-4 z-20 bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 flex flex-wrap items-center justify-evenly gap-4">
           <ActionButton
+            onClick={handleInterested}
             icon={<Heart className="w-5 h-5" />}
             label="Interest"
             primary
           />
           <ActionButton icon={<Bookmark className="w-5 h-5" />} label="Save" />
           <ActionButton
+            onClick={handleSaveLater}
             icon={<MessageCircle className="w-5 h-5" />}
             label="Add Feedback"
             onClick={() => setCommentModalOpen(true)}
