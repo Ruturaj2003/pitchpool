@@ -70,7 +70,7 @@ const DetailedPitchPage: React.FC = () => {
     trackMouse: true,
     trackTouch: true,
   });
-
+  // founderid , Founder Name , Founder Url , PitchId msg
   const handleInterested = async () => {
     try {
       await axios.post('/api/interested', {
@@ -102,15 +102,29 @@ const DetailedPitchPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      await axios.post('/api/pitch/feedback', {
+      const res = await axios.get(`/api/pitch/${pitchId.id}`);
+
+      const data = await res.data;
+      const founderId = data.userId;
+      const founderName = data.founderName;
+      const founderPhotoUrl = data.founderPhotoUrl;
+      console.log(founderId);
+      console.log(userId);
+
+      const sendingOBj = {
         investorId: userId,
         investorName: firstName,
         investorPhotoUrl: avatarUrl,
 
-        // Make sure userId is available in your component
-        pitchId: pitchId.id, // Replace with actual pitch ID
-        message: comment, // The comment text from your input
-      });
+        founderId: founderId,
+        founderName: founderName,
+        founderPhotoUrl: founderPhotoUrl,
+
+        pitchId: pitchId.id,
+        message: comment,
+      };
+
+      await axios.post('/api/pitch/feedback', sendingOBj);
 
       toast.success('Comment submitted!');
       setComment('');
