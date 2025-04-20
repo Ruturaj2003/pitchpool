@@ -43,7 +43,7 @@ const ShortDetailPage = () => {
 
   const handleInterested = async () => {
     try {
-      await axios.post('/api/pitch/interested', {
+      await axios.post('/api/interested', {
         userId,
         pitchId: pitchId.id,
       });
@@ -55,8 +55,8 @@ const ShortDetailPage = () => {
 
   const handleSaveLater = async () => {
     try {
-      await axios.post('/api/pitch/save', {
-        userId,
+      await axios.post('/api/watchlater', {
+        investorId: userId,
         pitchId: pitchId.id,
       });
       toast.success('Saved for later');
