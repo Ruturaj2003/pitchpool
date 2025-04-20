@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { SignIn, useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { SignIn, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const SignInPage = () => {
   const { isSignedIn } = useUser();
@@ -10,17 +10,18 @@ const SignInPage = () => {
   const [url, setUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    const role = sessionStorage.getItem('user_role');
+    const role = sessionStorage.getItem("user_role");
 
     if (isSignedIn) {
-      if (role === 'founder') router.push('/dashboard/founder');
-      else if (role === 'investor') router.push('/dashboard/investor');
-      else router.replace('/');
+      if (role === "founder") router.push("/dashboard/founder");
+      else if (role === "investor")
+        router.push("/dashboard/investor/interestedPitches");
+      else router.replace("/");
     } else {
       // Set redirect URL based on role
-      if (role === 'investor') setUrl('/dashboard/investor');
-      else if (role === 'founder') setUrl('/dashboard/founder');
-      else setUrl('/'); // fallback
+      if (role === "investor") setUrl("/dashboard/investor");
+      else if (role === "founder") setUrl("/dashboard/founder");
+      else setUrl("/"); // fallback
     }
   }, [isSignedIn, router]);
 

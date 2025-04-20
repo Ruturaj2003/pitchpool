@@ -1,37 +1,39 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { storage, db } from '@/lib/firebase';
+import { useState } from "react";
+import { storage, db } from "@/lib/firebase";
 import {
   ref as storageRef,
   uploadBytes,
   getDownloadURL,
-} from 'firebase/storage';
-import { ref as dbRef, set } from 'firebase/database'; // ✅ Realtime DB imports
-import { v4 as uuidv4 } from 'uuid';
-import { useUser } from '@clerk/nextjs';
+} from "firebase/storage";
+import { ref as dbRef, set } from "firebase/database"; // ✅ Realtime DB imports
+import { v4 as uuidv4 } from "uuid";
+import { useUser } from "@clerk/nextjs";
 
 export default function PitchUploadForm() {
   const { user } = useUser();
   const [form, setForm] = useState({
-    name: '',
-    tagline: '',
-    sector: '',
-    description: '',
-    founderName: '',
-    founderTitle: '',
-    founderPhotoUrl: '',
+    name: "",
+    tagline: "",
+    sector: "",
+    description: "",
+    founderName: "",
+    founderTitle: "",
+    founderPhotoUrl: "",
+    views: 0,
+    interest: 0,
     pitchDetails: {
-      problem: '',
-      solution: '',
-      marketSize: '',
-      businessModel: '',
-      competition: '',
-      traction: '',
-      team: '',
-      askAmount: '',
-      equity: '',
-      useOfFunds: '',
+      problem: "",
+      solution: "",
+      marketSize: "",
+      businessModel: "",
+      competition: "",
+      traction: "",
+      team: "",
+      askAmount: "",
+      equity: "",
+      useOfFunds: "",
     },
   });
 
@@ -63,7 +65,7 @@ export default function PitchUploadForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!videoFile || !thumbnailFile)
-      return alert('Please upload both the pitch video and a thumbnail.');
+      return alert("Please upload both the pitch video and a thumbnail.");
 
     setLoading(true);
     const id = uuidv4();
@@ -91,33 +93,35 @@ export default function PitchUploadForm() {
         createdAt: Date.now(),
       });
 
-      alert('Pitch uploaded successfully!');
+      alert("Pitch uploaded successfully!");
       setForm({
-        name: '',
-        tagline: '',
-        sector: '',
-        description: '',
-        founderName: '',
-        founderTitle: '',
-        founderPhotoUrl: '',
+        name: "",
+        tagline: "",
+        sector: "",
+        description: "",
+        founderName: "",
+        founderTitle: "",
+        founderPhotoUrl: "",
+        views: 0,
+        interest: 0,
         pitchDetails: {
-          problem: '',
-          solution: '',
-          marketSize: '',
-          businessModel: '',
-          competition: '',
-          traction: '',
-          team: '',
-          askAmount: '',
-          equity: '',
-          useOfFunds: '',
+          problem: "",
+          solution: "",
+          marketSize: "",
+          businessModel: "",
+          competition: "",
+          traction: "",
+          team: "",
+          askAmount: "",
+          equity: "",
+          useOfFunds: "",
         },
       });
       setVideoFile(null);
       setThumbnailFile(null);
     } catch (err) {
       console.error(err);
-      alert('Upload failed.');
+      alert("Upload failed.");
     }
 
     setLoading(false);
@@ -197,7 +201,7 @@ export default function PitchUploadForm() {
             <Input
               key={key}
               name={key}
-              label={key.replace(/([A-Z])/g, ' $1')}
+              label={key.replace(/([A-Z])/g, " $1")}
               value={value}
               onChange={handleChange}
             />
@@ -230,7 +234,7 @@ export default function PitchUploadForm() {
         disabled={loading}
         className="w-full md:w-auto bg-primary text-white px-6 py-2 rounded-md hover:bg-primary/90 transition"
       >
-        {loading ? 'Uploading...' : 'Upload Pitch'}
+        {loading ? "Uploading..." : "Upload Pitch"}
       </button>
     </form>
   );
@@ -251,22 +255,22 @@ const Input = ({
   required?: boolean;
 }) => {
   const placeholders: Record<string, string> = {
-    name: 'e.g. EcoCharge',
-    tagline: 'e.g. Charging the world sustainably',
-    sector: 'e.g. Renewable Energy',
-    founderName: 'e.g. Jane Doe',
-    founderTitle: 'e.g. CEO & Founder',
-    founderPhotoUrl: 'Paste an image URL (e.g. from LinkedIn)',
-    problem: 'What problem are you solving?',
-    solution: 'Describe your unique solution',
-    marketSize: 'How big is the opportunity?',
-    businessModel: 'How will you make money?',
-    competition: 'Who else is doing this?',
-    traction: 'Any growth, users, or revenue?',
-    team: 'Who is building this?',
-    askAmount: 'How much are you raising? (e.g. $100,000)',
-    equity: 'Equity offered for the investment (e.g. 10%)',
-    useOfFunds: 'How will you use the funds?',
+    name: "e.g. EcoCharge",
+    tagline: "e.g. Charging the world sustainably",
+    sector: "e.g. Renewable Energy",
+    founderName: "e.g. Jane Doe",
+    founderTitle: "e.g. CEO & Founder",
+    founderPhotoUrl: "Paste an image URL (e.g. from LinkedIn)",
+    problem: "What problem are you solving?",
+    solution: "Describe your unique solution",
+    marketSize: "How big is the opportunity?",
+    businessModel: "How will you make money?",
+    competition: "Who else is doing this?",
+    traction: "Any growth, users, or revenue?",
+    team: "Who is building this?",
+    askAmount: "How much are you raising? (e.g. $100,000)",
+    equity: "Equity offered for the investment (e.g. 10%)",
+    useOfFunds: "How will you use the funds?",
   };
 
   return (
@@ -280,7 +284,7 @@ const Input = ({
         id={name}
         value={value}
         onChange={onChange}
-        placeholder={placeholders[name] || ''}
+        placeholder={placeholders[name] || ""}
         className="w-full border rounded-md p-2"
         required={required}
       />
