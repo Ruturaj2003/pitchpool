@@ -46,6 +46,8 @@ const DetailedPitchPage: React.FC = () => {
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [comment, setComment] = useState('');
   const { user } = useUser();
+  const avatarUrl = user?.imageUrl;
+  const firstName = user?.firstName;
   const userId = user.id;
   const pitchId = useCommonStore((state) => state.pitchId);
 
@@ -100,10 +102,14 @@ const DetailedPitchPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      await axios.post('/api/pitch/comment', {
-        userId, // Make sure userId is available in your component
+      await axios.post('/api/pitch/feedback', {
+        investorId: userId,
+        investorName: firstName,
+        investorPhotoUrl: avatarUrl,
+
+        // Make sure userId is available in your component
         pitchId: pitchId.id, // Replace with actual pitch ID
-        comment, // The comment text from your input
+        message: comment, // The comment text from your input
       });
 
       toast.success('Comment submitted!');
