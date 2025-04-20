@@ -65,23 +65,66 @@ const FeedbackGiven: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const { user } = useUser();
   const userId = user?.id;
-  const fetchFeedBacks = async () => {
-    if (!userId) return;
+
+  const fetchDataPipeline = async (userId: string) => {
+    if (!userId) return [];
 
     try {
-      console.log('Logging ' + userId);
-
+      // Step 1: Fetch feedbacks given by the user
       const resp = await axios.get(`/api/pitch/feedback/from/${userId}`);
       const data = resp.data;
 
-      console.log(data.feedbacks);
-      toast.success('Fetched feedback successfully!');
+      const entries = Object.entries(data.feedbacks || {});
+      const formattedFeedbacks = entries.map(([id, fb]: any) => ({
+        pitchId: fb.pitchId || id,
+        founderName: fb.founderName || 'Unknown Company',
+        description: fb.message || 'No feedback description',
+      }));
+
+      // Step 2: Fetch full pitch data for each feedback
+      let pitchArray = [];
+      for (const feedback of formattedFeedbacks) {
+        let resp2 = await axios.get(`/api/pitch/${feedback.pitchId}`);
+        let fullPitchData = resp2.data;
+
+        // Step 3: Combine feedback and pitch data
+        pitchArray.push({
+          pitchId: fullPitchData.id,
+          founderName: fullPitchData.founderName || 'Unknown Founder',
+          founderUrl: fullPitchData.founderUrl || 'https://example.com',
+          message: feedback.description, // Feedback's message
+          fieldBadge: fullPitchData.category || 'Uncategorized',
+          date: fullPitchData.date || '24/11/24',
+        });
+      }
+      console.log(pitchArray);
+
+      return pitchArray; // Return the final array with all required data
     } catch (error) {
-      toast.error('Failed to fetch feedback');
+      console.error('Error in fetching data:', error);
+      return [];
     }
   };
+
+  // const fetchFeedBacks = async () => {
+  //   if (!userId) return;
+
+  //   try {
+  //     console.log('Logging ' + userId);
+
+  //     const resp = await axios.get(`/api/pitch/feedback/from/${userId}`);
+  //     const data = resp.data;
+
+  //     console.log(data.feedbacks);
+  //     toast.success('Fetched feedback successfully!');
+  //   } catch (error) {
+  //     toast.error('Failed to fetch feedback');
+  //   }
+  // };
+  let pitchAry;
   useEffect(() => {
-    fetchFeedBacks();
+    // fetchFeedBacks();
+    pitchAry = fetchDataPipeline(user?.id);
   }, []);
 
   const handleSearchChange = (value: string) => {
@@ -160,6 +203,7 @@ const FeedbackGiven: React.FC = () => {
         />
 
         <PCard></PCard>
+
         {/* {filteredPitches.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPitches.map((pitch, index) => (
