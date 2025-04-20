@@ -11,7 +11,7 @@ const PitchCard = ({
   fieldBadge = 'Technology',
 }) => {
   return (
-    <div className="max-w-sm mx-auto bg-gradient-to-br from-[#47d4d2] via-[#1097e0] to-[#224ada] p-6 rounded-2xl shadow-xl backdrop-blur-lg hover:shadow-2xl transition-all ease-in-out duration-300">
+    <div className="max-w mx-auto bg-gradient-to-br from-[#47d4d2] via-[#1097e0] to-[#224ada] p-6 rounded-2xl shadow-xl backdrop-blur-lg hover:shadow-2xl transition-all ease-in-out duration-300">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-2xl font-semibold text-white">{founderName}</h3>
         <span className="text-xs text-white bg-[#5ed2f976] px-3 py-1 rounded-full">
