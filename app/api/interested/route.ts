@@ -1,8 +1,8 @@
 // @ts-nocheck
 
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase';
-import { ref, set, runTransaction } from 'firebase/database';
+import { NextRequest, NextResponse } from 'next/server'
+import { db } from '@/lib/firebase'
+import { ref, set, runTransaction, get } from 'firebase/database'
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,12 +16,20 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Save user interest: /interests/{userId}/{pitchId} = true
-    await set(ref(db, `interests/${userId}/${pitchId}`), true);
+    const userInterestRef = ref(db, `interests/${userId}/${pitchId}`)
+    const snapshot = await get(userInterestRef)
 
-    // Increment interest count: /pitches/{pitchId}/interests
-    const interestCountRef = ref(db, `pitches/${pitchId}/interests`);
-    await runTransaction(interestCountRef, (current) => (current || 0) + 1);
+    // If already interested, skip adding again
+    if (snapshot.exists()) {
+      return NextResponse.json({ message: 'Already marked as interested' }, { status: 200 })
+    }
+
+    // Save user interest
+    await set(userInterestRef, true)
+
+    // Increment interest count atomically
+    const interestCountRef = ref(db, `pitches/${pitchId}/interests`)
+    await runTransaction(interestCountRef, (current) => (current || 0) + 1)
 
     return NextResponse.json(
       { message: 'Pitch marked as interested' },

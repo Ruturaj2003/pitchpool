@@ -15,8 +15,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const watchLaterRef = ref(db, `watchLater/${investorId}/${pitchId}`);
-    await set(watchLaterRef, true);
+    const watchLaterRef = ref(db, `watchLater/${investorId}/${pitchId}`)
+    const snapshot = await get(watchLaterRef)
+
+    // If already added, skip
+    if (snapshot.exists()) {
+      return NextResponse.json({ message: 'Pitch already in watch later list' }, { status: 200 })
+    }
+
+    // Otherwise, add to watch later
+    await set(watchLaterRef, true)
 
     return NextResponse.json(
       { message: 'Pitch added to watch later' },
